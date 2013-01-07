@@ -20,22 +20,29 @@
 #pragma comment(lib,"d3dx9.lib");
 #pragma comment(lib,"winmm.lib"); 
 
+
 #include <d3dx9.h>
 #include <string>
 
+#ifdef BUILD_EXPORT
+#define MU_DECLSPEC	__declspec(dllexport)
+#else
+#define MU_DECLSPEC/*	__declspec(dllimport)*/
+#endif
+
 namespace d3d
 {
-	bool InitD3D(
+        MU_DECLSPEC	bool InitD3D(
 		HINSTANCE hInstance,       // [in] Application instance.
 		int width, int height,     // [in] Backbuffer dimensions.
 		bool windowed,             // [in] Windowed (true)or full screen (false).
 		D3DDEVTYPE deviceType,     // [in] HAL or REF
 		IDirect3DDevice9** device);// [out]The created device.
 
-	int EnterMsgLoop( 
+	    MU_DECLSPEC int EnterMsgLoop( 
 		bool (*ptr_display)(float timeDelta));
 
-	LRESULT CALLBACK WndProc(
+	    MU_DECLSPEC LRESULT CALLBACK WndProc(
 		HWND hwnd,
 		UINT msg, 
 		WPARAM wParam,

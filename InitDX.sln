@@ -2,6 +2,16 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InitDX", "InitDX\InitDX.vcproj", "{9DA75AF3-8394-4F47-8E4D-687DAC50EE17}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA} = {2C49E5DD-E5A8-4653-BF51-6A7C558965AA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cube", "Cube\Cube.vcproj", "{C45E1911-DF4A-4838-A63C-E3932A86FC97}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA} = {2C49E5DD-E5A8-4653-BF51-6A7C558965AA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "comm", "comm\comm.vcproj", "{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +23,14 @@ Global
 		{9DA75AF3-8394-4F47-8E4D-687DAC50EE17}.Debug|Win32.Build.0 = Debug|Win32
 		{9DA75AF3-8394-4F47-8E4D-687DAC50EE17}.Release|Win32.ActiveCfg = Release|Win32
 		{9DA75AF3-8394-4F47-8E4D-687DAC50EE17}.Release|Win32.Build.0 = Release|Win32
+		{C45E1911-DF4A-4838-A63C-E3932A86FC97}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C45E1911-DF4A-4838-A63C-E3932A86FC97}.Debug|Win32.Build.0 = Debug|Win32
+		{C45E1911-DF4A-4838-A63C-E3932A86FC97}.Release|Win32.ActiveCfg = Release|Win32
+		{C45E1911-DF4A-4838-A63C-E3932A86FC97}.Release|Win32.Build.0 = Release|Win32
+		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}.Debug|Win32.Build.0 = Debug|Win32
+		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}.Release|Win32.ActiveCfg = Release|Win32
+		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,8 +12,8 @@
 //       in the world and move the camera around the world.
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
-#include "d3dUtility.h"
+#pragma comment(lib,"../Debug/comm.lib");
+#include "../../comm/d3dUtility.h"
 
 //
 // Globals
@@ -40,8 +40,14 @@ bool Display(float timeDelta)
 {
     if( Device )
     {
-        //分别用黑色和1.0填充后备表面和深度/模版缓冲区
-        Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00ff03f0, 1.0f, 0);
+        //清除表面和深度缓冲区
+        Device->Clear(  0,                                  //第二个参数中的矩形数组的个数
+                        0,                                  //将要清除的屏幕矩形的数组
+                        D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, //指定在哪些(表面/深度/模板)缓冲区上执行清除操作
+                        0x00ff03f0,                         //清除后屏幕颜色
+                        1.0f,                               //设置深度缓冲的值
+                        0                                   //设置模版缓冲的值
+                        );
 
         //页面切换，显示后缓冲区内容
         Device->Present(0, 0, 0, 0);
