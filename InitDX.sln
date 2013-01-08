@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cube", "Cube\Cube.vcproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "comm", "comm\comm.vcproj", "{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "triangle", "triangle\triangle.vcproj", "{AFF08326-497D-4B4C-AB30-D0B561E14384}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}.Debug|Win32.Build.0 = Debug|Win32
 		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}.Release|Win32.ActiveCfg = Release|Win32
 		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}.Release|Win32.Build.0 = Release|Win32
+		{AFF08326-497D-4B4C-AB30-D0B561E14384}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AFF08326-497D-4B4C-AB30-D0B561E14384}.Debug|Win32.Build.0 = Debug|Win32
+		{AFF08326-497D-4B4C-AB30-D0B561E14384}.Release|Win32.ActiveCfg = Release|Win32
+		{AFF08326-497D-4B4C-AB30-D0B561E14384}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
