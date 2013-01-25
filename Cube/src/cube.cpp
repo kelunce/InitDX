@@ -24,28 +24,27 @@ IDirect3DDevice9* Device = 0;
 const int Width  = 640;
 const int Height = 480;
 
-//顶点缓冲区指针
-IDirect3DVertexBuffer9* VB = 0;
-// 索引缓冲区指针
-IDirect3DIndexBuffer9*  IB = 0;
+
+IDirect3DVertexBuffer9* VB = 0; //顶点缓冲区指针
+
+IDirect3DIndexBuffer9*  IB = 0; // 索引缓冲区指针
 
 //
 // Classes and Structures
 //
-// 程序自定义的顶点结构
-struct Vertex
+struct Vertex   // 程序自定义的顶点结构
 {
 	Vertex(){}
 	Vertex(float x, float y, float z)
 	{
 		_x = x;  _y = y;  _z = z;
 	}
-    //包含x,y,z轴坐标
+    
 	float _x, _y, _z;
 	static const DWORD FVF;
 };
-// 指明程序使用的顶点格式
-const DWORD Vertex::FVF = D3DFVF_XYZ;
+
+const DWORD Vertex::FVF = D3DFVF_XYZ;   //指明程序使用的顶点格式 包含x,y,z轴坐标
 
 //
 // Framework Functions
@@ -55,9 +54,7 @@ bool Setup()
 	//
 	// Create vertex and index buffers.
 	//
-
-    //申请存储顶点数据的内存
-	Device->CreateVertexBuffer(
+	Device->CreateVertexBuffer( //申请存储顶点数据的内存
 		8 * sizeof(Vertex),     // [in] 想要申请的内存大小,单位为字节
 		D3DUSAGE_WRITEONLY,     // [in] 额外属性,只读/动态大小/点图元结构/软件处理
 		Vertex::FVF,            // [in] 灵活顶点格式FVF,用于指定顶点格式
@@ -65,8 +62,8 @@ bool Setup()
 		&VB,                    // [out] 申请成功后返回IDirect3DVertexBuffer9指针
 		0);                     // [in] 无用参数,置0
 
-    // 申请索引缓冲区
-	Device->CreateIndexBuffer(
+   
+	Device->CreateIndexBuffer(   // 申请索引缓冲区
 		36 * sizeof(WORD),
 		D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,         // [in] 索引缓冲区格式,设置为16或者32位.设置为32位时需要检查
@@ -103,7 +100,7 @@ bool Setup()
 	IB->Lock(0, 0, (void**)&indices, 0);
 
 	// front side
-	indices[0]  = 0; indices[1]  = 1; indices[2]  = 2;
+	indices[0]  = 0; indices[1]  = 1; indices[2]  = 2; // 指定顶点和索引的对应关系
 	indices[3]  = 0; indices[4]  = 2; indices[5]  = 3;
 
 	// back side
@@ -132,14 +129,14 @@ bool Setup()
 	// Position and aim the camera.
 	//
 
-	D3DXVECTOR3 position(0.0f, 0.0f, -5.0f);
-	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
+	D3DXVECTOR3 position(0.0f, 0.0f, -5.0f);    // 设置眼睛的位置
+	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);       // 设置眼睛看的视点
+	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);           // 一般都是Y轴单位向量
     D3DXMATRIX V;
-    // 获取视图矩阵(该矩阵和摄像机位置和方向相关,其实就是指定摄像机的位置)
-	D3DXMatrixLookAtLH(&V, &position, &target, &up);
-    // 设置视图矩阵
-    Device->SetTransform(D3DTS_VIEW, &V);
+   
+	D3DXMatrixLookAtLH(&V, &position, &target, &up); // 获取视图矩阵(该矩阵和摄像机位置和方向相关,其实就是指定摄像机的位置),默认眼睛在世界坐标原点,眼睛往屏幕里面看(Z轴正方向)
+    
+    Device->SetTransform(D3DTS_VIEW, &V);// 设置视图矩阵
     
     /*
     这里省略如下步骤:
@@ -155,25 +152,24 @@ bool Setup()
 
     // 设置投影矩阵,把3维转为2维
 	D3DXMATRIX proj;
-	D3DXMatrixPerspectiveFovLH(
+	D3DXMatrixPerspectiveFovLH(             // 获得指定的投影矩阵
 			&proj,                          // [out] 投影矩阵
 			D3DX_PI * 0.5f,                 // [in] 垂直视角范围,90度(即上下45度)
 			(float)Width / (float)Height,   // [in] 宽高比
 			1.0f,                           // [in] 近面距离
 			1000.0f);                       // [in] 远面距离
-	Device->SetTransform(D3DTS_PROJECTION, &proj);
+	Device->SetTransform(D3DTS_PROJECTION, &proj); // 设置投影矩阵
 
     /*
      这里没有设置视口变换矩阵,setviewport(...)把2维坐标转换为屏幕坐标
      最后的光栅化(计算每个三角形内的点的颜色) 都省略了
-     光栅化一般都是硬件完成
+     光栅化一般都是硬件完成,但是我们可以设置光栅化的一些状态来影响结果
     */
 
 	//
 	// Switch to wireframe mode.
-	//
-    // 使用线框来渲染
-	Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	//    
+	Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);// 使用线框线条来渲染
 
 	return true;
 }

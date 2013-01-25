@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="InitDX"
+	Name="2InitDX"
 	ProjectGUID="{9DA75AF3-8394-4F47-8E4D-687DAC50EE17}"
 	RootNamespace="InitDX"
 	Keyword="Win32Proj"

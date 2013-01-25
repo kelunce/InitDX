@@ -77,17 +77,17 @@ namespace d3d
 	const D3DXCOLOR    MAGENTA( D3DCOLOR_XRGB(255,   0, 255) );
 
     // 常用光源定义
-    MU_DECLSPEC D3DLIGHT9 InitDirectionalLight(D3DXVECTOR3 *direction,D3DXCOLOR *color);
-    MU_DECLSPEC D3DLIGHT9 InitPointLight(D3DXVECTOR3 *position,D3DXCOLOR *color);
-    MU_DECLSPEC D3DLIGHT9 InitSpotLight(D3DXVECTOR3 *position,D3DXVECTOR3 *direction,D3DXCOLOR *color);
+    MU_DECLSPEC D3DLIGHT9 InitDirectionalLight(D3DXVECTOR3 *direction,D3DXCOLOR *color);                // 简单的平行光光源
+    MU_DECLSPEC D3DLIGHT9 InitPointLight(D3DXVECTOR3 *position,D3DXCOLOR *color);                       // 点光源
+    MU_DECLSPEC D3DLIGHT9 InitSpotLight(D3DXVECTOR3 *position,D3DXVECTOR3 *direction,D3DXCOLOR *color); // 聚光灯光源
 
     // 常用材料定义
     MU_DECLSPEC D3DMATERIAL9 InitMtrl(D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e, float p);
-    const D3DMATERIAL9 WHITE_MTRL  = InitMtrl(WHITE, WHITE, WHITE, BLACK, 2.0f);
-    const D3DMATERIAL9 RED_MTRL    = InitMtrl(RED, RED, RED, BLACK, 2.0f);
-    const D3DMATERIAL9 GREEN_MTRL  = InitMtrl(GREEN, GREEN, GREEN, BLACK, 2.0f);
-    const D3DMATERIAL9 BLUE_MTRL   = InitMtrl(BLUE, BLUE, BLUE, BLACK, 2.0f);
-    const D3DMATERIAL9 YELLOW_MTRL = InitMtrl(YELLOW, YELLOW, YELLOW, BLACK, 2.0f);
+    const D3DMATERIAL9 WHITE_MTRL  = InitMtrl(WHITE, WHITE, WHITE, BLACK, 2.0f);    // 反射白光,即物体是白色的,什么颜色的光都反射
+    const D3DMATERIAL9 RED_MTRL    = InitMtrl(RED, RED, RED, BLACK, 2.0f);          // 反射红光,即物体是红色的,其他颜色都被吸收
+    const D3DMATERIAL9 GREEN_MTRL  = InitMtrl(GREEN, GREEN, GREEN, BLACK, 2.0f);    // 反射绿光,即物体是绿色的,其他颜色都被吸收
+    const D3DMATERIAL9 BLUE_MTRL   = InitMtrl(BLUE, BLUE, BLUE, BLACK, 2.0f);       // 反射蓝光,即物体是蓝色的,其他颜色都被吸收
+    const D3DMATERIAL9 YELLOW_MTRL = InitMtrl(YELLOW, YELLOW, YELLOW, BLACK, 2.0f); // 反射黄光,即物体是黄色的,其他颜色都被吸收
 }
 
 #endif // __d3dUtilityH__

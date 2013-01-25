@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="texQuad"
+	Name="7texQuad"
 	ProjectGUID="{AD60D5E9-D3C7-4365-83E6-D5484939645A}"
 	RootNamespace="texQuad"
 	Keyword="Win32Proj"

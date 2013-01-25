@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ColorTriangle"
+	Name="5ColorTriangle"
 	ProjectGUID="{1491407E-AC66-4F22-B366-79886B3E7161}"
 	RootNamespace="ColorTriangle"
 	Keyword="Win32Proj"

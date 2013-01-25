@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="4triangle"
-	ProjectGUID="{AFF08326-497D-4B4C-AB30-D0B561E14384}"
-	RootNamespace="triangle"
+	Name="8mtrlAlpha"
+	ProjectGUID="{EEA7CA9D-AA99-4231-BEF0-50FBB25F4F64}"
+	RootNamespace="mtrlAlpha"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -173,7 +173,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\triangle.cpp"
+				RelativePath=".\mtrlAlpha.cpp"
 				>
 			</File>
 		</Filter>

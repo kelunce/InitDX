@@ -31,7 +31,7 @@ Cube::Cube(IDirect3DDevice9* device)
 
 	// build box
 
-	// fill in the front face vertex data 这里不指定顶点的顺序,用索引指定!,其实这样做更加容易阅读
+	// fill in the front face vertex data
 	v[0] = Vertex(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
 	v[1] = Vertex(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
 	v[2] = Vertex( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
@@ -56,7 +56,7 @@ Cube::Cube(IDirect3DDevice9* device)
 	v[15] = Vertex(-1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
 
 	// fill in the left face vertex data
-	v[16] = Vertex(-1.0f, -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f); // 这个顶点虽然上面有了,但是他们的顶点法线是不相同的!
+	v[16] = Vertex(-1.0f, -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 	v[17] = Vertex(-1.0f,  1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 	v[18] = Vertex(-1.0f,  1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 	v[19] = Vertex(-1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -125,13 +125,13 @@ bool Cube::draw(D3DXMATRIX* world, D3DMATERIAL9* mtrl, IDirect3DTexture9* tex)
 	_device->SetStreamSource(0, _vb, 0, sizeof(Vertex));
 	_device->SetIndices(_ib);
 	_device->SetFVF(FVF_VERTEX);
-	_device->DrawIndexedPrimitive(// 使用索引缓冲区渲染
+	_device->DrawIndexedPrimitive(
 		D3DPT_TRIANGLELIST, 
 		0,                  
 		0,                  
-		24, // 渲染24个索引顶点
+		24,
 		0,
-		12);  // 渲染12个三角形
+		12);  
 
 	return true;
 }

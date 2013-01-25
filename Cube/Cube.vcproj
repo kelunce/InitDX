@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Cube"
+	Name="4Cube"
 	ProjectGUID="{C45E1911-DF4A-4838-A63C-E3932A86FC97}"
+	RootNamespace="4Cube"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>

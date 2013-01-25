@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="directionalLight"
+	Name="6directionalLight"
 	ProjectGUID="{B8DE00E3-9C2E-4AD4-83DA-CEF9E400E9E3}"
 	RootNamespace="directionalLight"
 	Keyword="Win32Proj"

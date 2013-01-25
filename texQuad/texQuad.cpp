@@ -18,13 +18,13 @@
 // Globals
 //
 
-IDirect3DDevice9*     Device = 0; 
+IDirect3DDevice9*     Device = 0; // D3D设备指针
 
-const int Width  = 640;
-const int Height = 480;
+const int Width  = 640; // 窗口宽度,单位像素
+const int Height = 480; // 窗口高度,单位像素
 
-IDirect3DVertexBuffer9* Quad = 0;
-IDirect3DTexture9*      Tex  = 0;
+IDirect3DVertexBuffer9* Quad = 0;   // 顶点缓冲区
+IDirect3DTexture9*      Tex  = 0;   // 纹理表面缓冲区
 
 //
 // Classes and Structures
@@ -48,7 +48,7 @@ struct Vertex
 
 	static const DWORD FVF;
 };
-const DWORD Vertex::FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1;
+const DWORD Vertex::FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1; // 设置顶点格式,包含坐标_x, _y, _z 包含顶点法线_nx, _ny, _nz 包含纹理坐标_u, _v
 
 //
 // Framework Functions
@@ -60,7 +60,7 @@ bool Setup()
 	// quad geoemtry.
 	//
 
-	Device->CreateVertexBuffer(
+	Device->CreateVertexBuffer( // 创建顶点缓冲区
 		6 * sizeof(Vertex), 
 		D3DUSAGE_WRITEONLY,
 		Vertex::FVF,
@@ -69,22 +69,29 @@ bool Setup()
 		0);
 
 	Vertex* v;
-	Quad->Lock(0, 0, (void**)&v, 0);
+	Quad->Lock(0, 0, (void**)&v, 0);    // 顶点缓冲区操作前都要上锁
 
     /*
+        三角形三个角定义为:
         1--------2[4]
         |         |
         |         |
         0[3]------[5]   
+
+        纹理的坐标系定义为(u,v):
+       (0,0)------》u+
+        |
+        |
+        ︾ v+
     */
 	// quad built from two triangles, note texture coordinates:
-	v[0] = Vertex(-1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[1] = Vertex(-1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[2] = Vertex( 1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
+	v[0] = Vertex(-1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f); // 纹理坐标是(0.0f,1.0f), 顶点法线是(0,0,-1)
+	v[1] = Vertex(-1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f); // 纹理坐标是(0.0f,0.0f), 顶点法线是(0,0,-1)
+	v[2] = Vertex( 1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f); // 纹理坐标是(1.0f,0.0f), 顶点法线是(0,0,-1)
 
-	v[3] = Vertex(-1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[4] = Vertex( 1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
-	v[5] = Vertex( 1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
+	v[3] = Vertex(-1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f); // 纹理坐标是(0.0f,1.0f), 顶点法线是(0,0,-1)
+	v[4] = Vertex( 1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f); // 纹理坐标是(1.0f,0.0f), 顶点法线是(0,0,-1)
+	v[5] = Vertex( 1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f); // 纹理坐标是(1.0f,1.0f), 顶点法线是(0,0,-1)
 
 	Quad->Unlock();
 
@@ -92,48 +99,44 @@ bool Setup()
 	// Create the texture and set filters.
 	//
 
-	D3DXCreateTextureFromFile(
+	D3DXCreateTextureFromFile(  //从文件中加载纹理,一般游戏中使用内存加载的,那样会更有效率
 		Device,
 		L"dx5_logo.JPG",
 		&Tex);
 
-    // 设置为当前纹理
-	Device->SetTexture(0, Tex);
-
-    // 设置放大过滤方法为线性过滤
-	Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-
-    // 设置缩小过滤方法为线性过滤
-	Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-
-    // 设置多纹理过滤方法
-	Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+	Device->SetTexture(0, Tex);// 设置为当前纹理
+    
+	Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);// 设置放大过滤方法为线性过滤,让纹理平滑
+    
+	Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);// 设置缩小过滤方法为线性过滤,让纹理平滑
+    
+	Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);// 设置多纹理过滤方法,让纹理平滑
 
 	//
 	// Don't use lighting for this sample.
 	//
-	Device->SetRenderState(D3DRS_LIGHTING, false);
+	Device->SetRenderState(D3DRS_LIGHTING, false);// 关闭灯光,默认灯光是打开的
 
 	//
 	// Set the projection matrix.
 	//
 
 	D3DXMATRIX proj;
-	D3DXMatrixPerspectiveFovLH(
-		&proj,
-		D3DX_PI * 0.5f, // 90 - degree
-		(float)Width / (float)Height,
-		1.0f,
-		1000.0f);
-	Device->SetTransform(D3DTS_PROJECTION, &proj);
+	D3DXMatrixPerspectiveFovLH( // 获得特定投影平面变换矩阵
+		&proj,  // [out] 输出投影矩阵
+		D3DX_PI * 0.5f, // 90 - degree 俯仰45度角
+		(float)Width / (float)Height,   // 长宽比
+		1.0f,   // 近面距离
+		1000.0f);   // 远面距离
+	Device->SetTransform(D3DTS_PROJECTION, &proj);// 设置投影矩阵
 
 	return true;
 }
 
 void Cleanup()
 {
-	d3d::Release<IDirect3DVertexBuffer9*>(Quad);
-	d3d::Release<IDirect3DTexture9*>(Tex);
+	d3d::Release<IDirect3DVertexBuffer9*>(Quad); // 释放顶点缓冲区,和com用法一致
+	d3d::Release<IDirect3DTexture9*>(Tex);  // 释放纹理表面缓冲区
 }
 
 bool Display(float timeDelta)
@@ -143,9 +146,9 @@ bool Display(float timeDelta)
 		Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
 		Device->BeginScene();
 
-		Device->SetStreamSource(0, Quad, 0, sizeof(Vertex));
-		Device->SetFVF(Vertex::FVF);
-		Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2);
+		Device->SetStreamSource(0, Quad, 0, sizeof(Vertex));    // 设置流式数据源
+		Device->SetFVF(Vertex::FVF);    // 设置顶点格式
+		Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2);    //绘制两个三角形
 
 		Device->EndScene();
 		Device->Present(0, 0, 0, 0);
@@ -166,7 +169,7 @@ LRESULT CALLBACK d3d::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_KEYDOWN:
-		if( wParam == VK_ESCAPE )
+		if( wParam == VK_ESCAPE )   // Esc键
 			::DestroyWindow(hwnd);
 		break;
 	}

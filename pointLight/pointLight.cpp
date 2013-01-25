@@ -1,33 +1,32 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // 
-// File: texCube.cpp
+// File: pointLight.cpp
 // 
 // Author: Frank Luna (C) All Rights Reserved
 //
 // System: AMD Athlon 1800+ XP, 512 DDR, Geforce 3, Windows XP, MSVC++ 7.0 
 //
-// Desc: Renders a textured cube.  Demonstrates creating a texture, setting
-//       texture filters, enabling a texture, and texture coordinates.  Use
-//       the arrow keys to orbit the scene.
+// Desc: Demonstrates using a point light with D3DX objects.  You can orbit
+//       the scene using the left and right arrow keys.  In addition you can 
+//       elevate the camera with the up and down arrow keys.
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma comment(lib,"../Debug/comm.lib")
 #include "../comm/d3dUtility.h"
-#include "cube.h"
-#include "vertex.h"
 
 //
 // Globals
 //
 
-IDirect3DDevice9*     Device = 0; 
+IDirect3DDevice9* Device = 0; 
 
 const int Width  = 640;
 const int Height = 480;
  
-Cube*              Box = 0;
-IDirect3DTexture9* Tex = 0;
+ID3DXMesh* Objects[4] = {0, 0, 0, 0};
+D3DXMATRIX  Worlds[4];
+D3DMATERIAL9 Mtrls[4];
 
 //
 // Framework Functions
@@ -35,44 +34,54 @@ IDirect3DTexture9* Tex = 0;
 bool Setup()
 {
 	//
-	// Create the cube.
+	// Create objects.
 	//
 
-	Box = new Cube(Device);
+	D3DXCreateTeapot(Device, &Objects[0], 0);
+	D3DXCreateSphere(Device, 1.0f, 20, 20, &Objects[1], 0);
+	D3DXCreateTorus(Device, 0.5f, 1.0f, 20, 20, &Objects[2], 0);
+	D3DXCreateCylinder(Device, 0.5f, 0.5f, 2.0f, 20, 20, &Objects[3], 0);
 
 	//
-	// Set a directional light.
+	// Build world matrices - position the objects in world space.
 	//
 
-	D3DLIGHT9 light;
-	::ZeroMemory(&light, sizeof(light));
-	light.Type      = D3DLIGHT_DIRECTIONAL;
-	light.Ambient   = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	light.Diffuse   = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	light.Specular  = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
-	light.Direction = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
-	Device->SetLight(0, &light);
+	D3DXMatrixTranslation(&Worlds[0],  0.0f,  2.0f, 0.0f);
+	D3DXMatrixTranslation(&Worlds[1],  0.0f, -2.0f, 0.0f);
+	D3DXMatrixTranslation(&Worlds[2], -3.0f,  0.0f, 0.0f);
+	D3DXMatrixTranslation(&Worlds[3],  3.0f,  0.0f, 0.0f);
+
+	//
+	// Setup the object's materials.
+	//
+
+	Mtrls[0] = d3d::RED_MTRL;
+	Mtrls[1] = d3d::BLUE_MTRL;
+	Mtrls[2] = d3d::GREEN_MTRL;
+	Mtrls[3] = d3d::YELLOW_MTRL;
+
+	//
+	// Setup a point light.  Note that the point light
+	// is positioned at the origin.
+	//
+
+	D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
+	D3DXCOLOR   c = d3d::WHITE;
+	D3DLIGHT9 point = d3d::InitPointLight(&pos, &c);
+
+	//
+	// Set and Enable the light.
+	//
+
+	Device->SetLight(0, &point);
 	Device->LightEnable(0, true);
 
-	Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);// 启用变换后重新单位化顶点法线向量
-    
-	Device->SetRenderState(D3DRS_SPECULARENABLE, true);// 启用镜面光,默认是关闭
-
 	//
-	// Create texture.
-	//
-	D3DXCreateTextureFromFile(
-		Device,
-		L"crate.jpg",
-		&Tex);
-
-	// 
-	// Set Texture Filter States.
+	// Set lighting related render states.
 	//
 
-	Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-	Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+	Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);
+	Device->SetRenderState(D3DRS_SPECULARENABLE, false);
 
 	//
 	// Set the projection matrix.
@@ -81,7 +90,7 @@ bool Setup()
 	D3DXMATRIX proj;
 	D3DXMatrixPerspectiveFovLH(
 			&proj,
-			D3DX_PI * 0.5f, // 90 - degree
+			D3DX_PI * 0.25f, // 45 - degree
 			(float)Width / (float)Height,
 			1.0f,
 			1000.0f);
@@ -92,11 +101,11 @@ bool Setup()
 
 void Cleanup()
 {
-	d3d::Delete<Cube*>(Box);
-	d3d::Release<IDirect3DTexture9*>(Tex);
+	for(int i = 0; i < 4; i++)
+		d3d::Release<ID3DXMesh*>(Objects[i]);
 }
 
-bool Display(float timeDelta)   // timeDelta是每帧的时间间隔,单位是秒
+bool Display(float timeDelta)
 {
 	if( Device )
 	{
@@ -105,7 +114,7 @@ bool Display(float timeDelta)   // timeDelta是每帧的时间间隔,单位是秒
 		//
 
 		static float angle  = (3.0f * D3DX_PI) / 2.0f;
-		static float height = 2.0f;
+		static float height = 5.0f;
 	
 		if( ::GetAsyncKeyState(VK_LEFT) & 0x8000f )
 			angle -= 0.5f * timeDelta;
@@ -119,7 +128,7 @@ bool Display(float timeDelta)   // timeDelta是每帧的时间间隔,单位是秒
 		if( ::GetAsyncKeyState(VK_DOWN) & 0x8000f )
 			height -= 5.0f * timeDelta;
 
-		D3DXVECTOR3 position( cosf(angle) * 3.0f, height, sinf(angle) * 3.0f );
+		D3DXVECTOR3 position( cosf(angle) * 7.0f, height, sinf(angle) * 7.0f );
 		D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 		D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 		D3DXMATRIX V;
@@ -130,20 +139,24 @@ bool Display(float timeDelta)   // timeDelta是每帧的时间间隔,单位是秒
 		//
 		// Draw the scene:
 		//
-
-		Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
+		Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00000000, 1.0f, 0);
 		Device->BeginScene();
 
-		Device->SetMaterial(&d3d::WHITE_MTRL);
-		Device->SetTexture(0, Tex);
-
-		Box->draw(0, 0, 0);
+		for(int i = 0; i < 4; i++)
+		{
+			// set material and world matrix for ith object, then render
+			// the ith object.
+			Device->SetMaterial(&Mtrls[i]);
+			Device->SetTransform(D3DTS_WORLD, &Worlds[i]);
+			Objects[i]->DrawSubset(0);
+		}
 
 		Device->EndScene();
 		Device->Present(0, 0, 0, 0);
 	}
 	return true;
 }
+
 
 //
 // WndProc

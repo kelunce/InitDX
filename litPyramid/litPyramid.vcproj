@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="litPyramid"
+	Name="6litPyramid"
 	ProjectGUID="{FDB6EBBD-97EE-4B54-A86B-991E04EE2632}"
 	RootNamespace="litPyramid"
 	Keyword="Win32Proj"

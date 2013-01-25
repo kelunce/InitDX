@@ -69,9 +69,15 @@ bool Setup()
 
 	Vertex* vertices;
 	Triangle->Lock(0, 0, (void**)&vertices, 0);
-
-	vertices[0] = Vertex(-1.0f, 0.0f, 2.0f);
-	vertices[1] = Vertex( 0.0f, 3.0f, 2.0f);
+/*
+这三个顶点的定义顺序是顺时针！！：
+              1
+            /   \
+          /       \
+        0 -------- 2
+*/
+	vertices[0] = Vertex(-1.0f, 0.0f, 2.0f);    // 顺时针定义各个顶点,因为这里默认世界坐标系和观察坐标系一致
+	vertices[1] = Vertex( 0.0f, 3.0f, 2.0f);    // 如果不是顺时针即逆时针,表示背面,默认是不会显示的,除非改变背面裁剪计算方式
 	vertices[2] = Vertex( 1.0f, 0.0f, 2.0f);
 
 	Triangle->Unlock();
@@ -117,14 +123,14 @@ bool Setup()
         D3DVIEWPORT9 vp;
         Device->GetViewport(&vp);
         得到默认的vp={0,0,640,480,0,1},默认是渲染窗口大小
-    8.光栅化(硬件完成?)
+    8.光栅化(硬件完成,但是我们设置一些状态去影响他)
     */
 
 	//
 	// Set wireframe mode render state. 默认填充方式是D3DFILL_SOLID实心
 	//
 
-	Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);// 默认填充方式是D3DFILL_SOLID实心
 
 	return true;
 }

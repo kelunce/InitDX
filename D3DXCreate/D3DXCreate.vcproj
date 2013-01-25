@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="D3DXCreate"
+	Name="4D3DXCreate"
 	ProjectGUID="{DA9D96FD-CF24-4245-A5F8-DD3328DB06A9}"
 	RootNamespace="D3DXCreate"
 	Keyword="Win32Proj"

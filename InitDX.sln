@@ -1,35 +1,43 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InitDX", "InitDX\InitDX.vcproj", "{9DA75AF3-8394-4F47-8E4D-687DAC50EE17}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2InitDX", "InitDX\InitDX.vcproj", "{9DA75AF3-8394-4F47-8E4D-687DAC50EE17}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA} = {2C49E5DD-E5A8-4653-BF51-6A7C558965AA}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cube", "Cube\Cube.vcproj", "{C45E1911-DF4A-4838-A63C-E3932A86FC97}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4Cube", "Cube\Cube.vcproj", "{C45E1911-DF4A-4838-A63C-E3932A86FC97}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2C49E5DD-E5A8-4653-BF51-6A7C558965AA} = {2C49E5DD-E5A8-4653-BF51-6A7C558965AA}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "comm", "comm\comm.vcproj", "{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "triangle", "triangle\triangle.vcproj", "{AFF08326-497D-4B4C-AB30-D0B561E14384}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4triangle", "triangle\triangle.vcproj", "{AFF08326-497D-4B4C-AB30-D0B561E14384}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "teapot", "teapot\teapot.vcproj", "{47E04471-2840-4241-B676-8B1585859343}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4teapot", "teapot\teapot.vcproj", "{47E04471-2840-4241-B676-8B1585859343}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "D3DXCreate", "D3DXCreate\D3DXCreate.vcproj", "{DA9D96FD-CF24-4245-A5F8-DD3328DB06A9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4D3DXCreate", "D3DXCreate\D3DXCreate.vcproj", "{DA9D96FD-CF24-4245-A5F8-DD3328DB06A9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ColorTriangle", "ColorTriangle\ColorTriangle.vcproj", "{1491407E-AC66-4F22-B366-79886B3E7161}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "5ColorTriangle", "ColorTriangle\ColorTriangle.vcproj", "{1491407E-AC66-4F22-B366-79886B3E7161}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "litPyramid", "litPyramid\litPyramid.vcproj", "{FDB6EBBD-97EE-4B54-A86B-991E04EE2632}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "6litPyramid", "litPyramid\litPyramid.vcproj", "{FDB6EBBD-97EE-4B54-A86B-991E04EE2632}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "directionalLight", "directionalLight\directionalLight.vcproj", "{B8DE00E3-9C2E-4AD4-83DA-CEF9E400E9E3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "6directionalLight", "directionalLight\directionalLight.vcproj", "{B8DE00E3-9C2E-4AD4-83DA-CEF9E400E9E3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "texQuad", "texQuad\texQuad.vcproj", "{AD60D5E9-D3C7-4365-83E6-D5484939645A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7texQuad", "texQuad\texQuad.vcproj", "{AD60D5E9-D3C7-4365-83E6-D5484939645A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AddressModes", "AddressModes\AddressModes.vcproj", "{0C969A75-FB84-4600-9B86-78E4FAAF81EC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7AddressModes", "AddressModes\AddressModes.vcproj", "{0C969A75-FB84-4600-9B86-78E4FAAF81EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TexCube", "TexCube\TexCube.vcproj", "{732B1B16-87BC-4BFC-9254-62701E6F731A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7TexCube", "TexCube\TexCube.vcproj", "{732B1B16-87BC-4BFC-9254-62701E6F731A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "6pointLight", "pointLight\pointLight.vcproj", "{824940BF-ED92-42EF-AB1B-4D788E219B2E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "6spotlight", "spotlight\spotlight.vcproj", "{C3CAB257-FAAE-4F69-A736-44BCE9B2FE16}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "8mtrlAlpha", "mtrlAlpha\mtrlAlpha.vcproj", "{EEA7CA9D-AA99-4231-BEF0-50FBB25F4F64}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "8texAlpha", "8texAlpha\8texAlpha.vcproj", "{21FF71FD-5F85-4B1C-9B01-A1FC06D3BA86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +93,22 @@ Global
 		{732B1B16-87BC-4BFC-9254-62701E6F731A}.Debug|Win32.Build.0 = Debug|Win32
 		{732B1B16-87BC-4BFC-9254-62701E6F731A}.Release|Win32.ActiveCfg = Release|Win32
 		{732B1B16-87BC-4BFC-9254-62701E6F731A}.Release|Win32.Build.0 = Release|Win32
+		{824940BF-ED92-42EF-AB1B-4D788E219B2E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{824940BF-ED92-42EF-AB1B-4D788E219B2E}.Debug|Win32.Build.0 = Debug|Win32
+		{824940BF-ED92-42EF-AB1B-4D788E219B2E}.Release|Win32.ActiveCfg = Release|Win32
+		{824940BF-ED92-42EF-AB1B-4D788E219B2E}.Release|Win32.Build.0 = Release|Win32
+		{C3CAB257-FAAE-4F69-A736-44BCE9B2FE16}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C3CAB257-FAAE-4F69-A736-44BCE9B2FE16}.Debug|Win32.Build.0 = Debug|Win32
+		{C3CAB257-FAAE-4F69-A736-44BCE9B2FE16}.Release|Win32.ActiveCfg = Release|Win32
+		{C3CAB257-FAAE-4F69-A736-44BCE9B2FE16}.Release|Win32.Build.0 = Release|Win32
+		{EEA7CA9D-AA99-4231-BEF0-50FBB25F4F64}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EEA7CA9D-AA99-4231-BEF0-50FBB25F4F64}.Debug|Win32.Build.0 = Debug|Win32
+		{EEA7CA9D-AA99-4231-BEF0-50FBB25F4F64}.Release|Win32.ActiveCfg = Release|Win32
+		{EEA7CA9D-AA99-4231-BEF0-50FBB25F4F64}.Release|Win32.Build.0 = Release|Win32
+		{21FF71FD-5F85-4B1C-9B01-A1FC06D3BA86}.Debug|Win32.ActiveCfg = Debug|Win32
+		{21FF71FD-5F85-4B1C-9B01-A1FC06D3BA86}.Debug|Win32.Build.0 = Debug|Win32
+		{21FF71FD-5F85-4B1C-9B01-A1FC06D3BA86}.Release|Win32.ActiveCfg = Release|Win32
+		{21FF71FD-5F85-4B1C-9B01-A1FC06D3BA86}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

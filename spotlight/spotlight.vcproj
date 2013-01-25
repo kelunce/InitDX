@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="4triangle"
-	ProjectGUID="{AFF08326-497D-4B4C-AB30-D0B561E14384}"
-	RootNamespace="triangle"
+	Name="6spotlight"
+	ProjectGUID="{C3CAB257-FAAE-4F69-A736-44BCE9B2FE16}"
+	RootNamespace="spotlight"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -173,7 +173,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\triangle.cpp"
+				RelativePath=".\spotLight.cpp"
 				>
 			</File>
 		</Filter>

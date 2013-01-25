@@ -79,9 +79,9 @@ bool Setup()
     Device->SetLight(0, &dir);
     Device->LightEnable(0, true);
 
-    // 设置重新计算法线方向并打开镜面光
-    Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);
-    Device->SetRenderState(D3DRS_SPECULARENABLE, true);
+    
+    Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);   // 启用重新归一化顶点法线向量,注意顶点的格式包含了D3DFVF_NORMAL
+    Device->SetRenderState(D3DRS_SPECULARENABLE, true);     // 启用镜面光计算
 
     //
     // Position and aim the camera.
