@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
+ï»¿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // File: d3dxcreate.cpp
 // 
@@ -12,9 +12,10 @@
 //       in the world and move the camera around the world.
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
-#pragma comment(lib,"../Debug/comm.lib")
+// ä¸å†æ˜¾ç¤ºä½¿ç”¨comm.lib,æ”¹ä¸ºä½¿ç”¨é¡¹ç›®ä¾èµ–(vs2010ä¸­è¦è®¾ç½®ä¸ºå¼•ç”¨)
+//#pragma comment(lib,"../Debug/comm.lib")
 #include "../comm/d3dUtility.h"
+
 
 //
 // Globals
@@ -41,13 +42,13 @@ bool Setup()
 	// Create the objects.
 	//
 
-    // ²èºø
+    // èŒ¶å£¶
 	D3DXCreateTeapot(
 		Device,
 		&Objects[0],
 		0);
 
-    // Á¢·½Ìå
+    // ç«‹æ–¹ä½“
 	D3DXCreateBox(
 		Device,
 		2.0f, // width
@@ -56,7 +57,7 @@ bool Setup()
 		&Objects[1],
 		0);
 
-    // Ô²ÖùÌå
+    // åœ†æŸ±ä½“
 	// cylinder is built aligned on z-axis
 	D3DXCreateCylinder(
 		Device,
@@ -68,7 +69,7 @@ bool Setup()
 		&Objects[2],
 		0);
 
-    // Ô²»·
+    // åœ†ç¯
 	D3DXCreateTorus(
 		Device,
 		1.0f, // inner radius
@@ -78,7 +79,7 @@ bool Setup()
 		&Objects[3],
 		0);
 
-    // ÇòÌå
+    // çƒä½“
 	D3DXCreateSphere(
 		Device,
 		1.0f, // radius
@@ -217,13 +218,13 @@ int WINAPI WinMain(HINSTANCE hinstance,
 	if(!d3d::InitD3D(hinstance,
 		Width, Height, true, D3DDEVTYPE_HAL, &Device))
 	{
-		::MessageBox(0, L"InitD3D() - FAILED", 0, 0);
+		::MessageBox(0, _T("InitD3D() - FAILED"), 0, 0);
 		return 0;
 	}
 		
 	if(!Setup())
 	{
-		::MessageBox(0, L"Setup() - FAILED", 0, 0);
+		::MessageBox(0, _T("Setup() - FAILED"), 0, 0);
 		return 0;
 	}
 

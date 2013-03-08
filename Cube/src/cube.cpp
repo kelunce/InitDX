@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
+ï»¿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // File: cube.cpp
 // 
@@ -11,28 +11,28 @@
 //       drawing commands.
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma comment(lib,"../Debug/comm.lib");
+// ä¸å†æ˜¾ç¤ºä½¿ç”¨comm.lib,æ”¹ä¸ºä½¿ç”¨é¡¹ç›®ä¾èµ–(vs2010ä¸­è¦è®¾ç½®ä¸ºå¼•ç”¨)
+//#pragma comment(lib,"../Debug/comm.lib")
 #include "../../comm/d3dUtility.h"
-
 //
 // Globals
 //
 
 IDirect3DDevice9* Device = 0; 
 
-// ÆÁÄ»´óĞ¡
+// å±å¹•å¤§å°
 const int Width  = 640;
 const int Height = 480;
 
 
-IDirect3DVertexBuffer9* VB = 0; //¶¥µã»º³åÇøÖ¸Õë
+IDirect3DVertexBuffer9* VB = 0; //é¡¶ç‚¹ç¼“å†²åŒºæŒ‡é’ˆ
 
-IDirect3DIndexBuffer9*  IB = 0; // Ë÷Òı»º³åÇøÖ¸Õë
+IDirect3DIndexBuffer9*  IB = 0; // ç´¢å¼•ç¼“å†²åŒºæŒ‡é’ˆ
 
 //
 // Classes and Structures
 //
-struct Vertex   // ³ÌĞò×Ô¶¨ÒåµÄ¶¥µã½á¹¹
+struct Vertex   // ç¨‹åºè‡ªå®šä¹‰çš„é¡¶ç‚¹ç»“æ„
 {
 	Vertex(){}
 	Vertex(float x, float y, float z)
@@ -44,7 +44,7 @@ struct Vertex   // ³ÌĞò×Ô¶¨ÒåµÄ¶¥µã½á¹¹
 	static const DWORD FVF;
 };
 
-const DWORD Vertex::FVF = D3DFVF_XYZ;   //Ö¸Ã÷³ÌĞòÊ¹ÓÃµÄ¶¥µã¸ñÊ½ °üº¬x,y,zÖá×ø±ê
+const DWORD Vertex::FVF = D3DFVF_XYZ;   //æŒ‡æ˜ç¨‹åºä½¿ç”¨çš„é¡¶ç‚¹æ ¼å¼ åŒ…å«x,y,zè½´åæ ‡
 
 //
 // Framework Functions
@@ -54,19 +54,19 @@ bool Setup()
 	//
 	// Create vertex and index buffers.
 	//
-	Device->CreateVertexBuffer( //ÉêÇë´æ´¢¶¥µãÊı¾İµÄÄÚ´æ
-		8 * sizeof(Vertex),     // [in] ÏëÒªÉêÇëµÄÄÚ´æ´óĞ¡,µ¥Î»Îª×Ö½Ú
-		D3DUSAGE_WRITEONLY,     // [in] ¶îÍâÊôĞÔ,Ö»¶Á/¶¯Ì¬´óĞ¡/µãÍ¼Ôª½á¹¹/Èí¼ş´¦Àí
-		Vertex::FVF,            // [in] Áé»î¶¥µã¸ñÊ½FVF,ÓÃÓÚÖ¸¶¨¶¥µã¸ñÊ½
-        D3DPOOL_MANAGED,        // [in] ÄÚ´æ³ØÀàĞÍ,ÓĞD3DPOOL_DEFAULT(Ä¬ÈÏ),D3DPOOL_MANAGED(ÍĞ¹Ü),D3DPOOL_SYSTEMMEM(ÏµÍ³),D3DPOOL_SCRATCH                 = 3,
-		&VB,                    // [out] ÉêÇë³É¹¦ºó·µ»ØIDirect3DVertexBuffer9Ö¸Õë
-		0);                     // [in] ÎŞÓÃ²ÎÊı,ÖÃ0
+	Device->CreateVertexBuffer( //ç”³è¯·å­˜å‚¨é¡¶ç‚¹æ•°æ®çš„å†…å­˜
+		8 * sizeof(Vertex),     // [in] æƒ³è¦ç”³è¯·çš„å†…å­˜å¤§å°,å•ä½ä¸ºå­—èŠ‚
+		D3DUSAGE_WRITEONLY,     // [in] é¢å¤–å±æ€§,åªè¯»/åŠ¨æ€å¤§å°/ç‚¹å›¾å…ƒç»“æ„/è½¯ä»¶å¤„ç†
+		Vertex::FVF,            // [in] çµæ´»é¡¶ç‚¹æ ¼å¼FVF,ç”¨äºæŒ‡å®šé¡¶ç‚¹æ ¼å¼
+        D3DPOOL_MANAGED,        // [in] å†…å­˜æ± ç±»å‹,æœ‰D3DPOOL_DEFAULT(é»˜è®¤),D3DPOOL_MANAGED(æ‰˜ç®¡),D3DPOOL_SYSTEMMEM(ç³»ç»Ÿ),D3DPOOL_SCRATCH                 = 3,
+		&VB,                    // [out] ç”³è¯·æˆåŠŸåè¿”å›IDirect3DVertexBuffer9æŒ‡é’ˆ
+		0);                     // [in] æ— ç”¨å‚æ•°,ç½®0
 
    
-	Device->CreateIndexBuffer(   // ÉêÇëË÷Òı»º³åÇø
+	Device->CreateIndexBuffer(   // ç”³è¯·ç´¢å¼•ç¼“å†²åŒº
 		36 * sizeof(WORD),
 		D3DUSAGE_WRITEONLY,
-		D3DFMT_INDEX16,         // [in] Ë÷Òı»º³åÇø¸ñÊ½,ÉèÖÃÎª16»òÕß32Î».ÉèÖÃÎª32Î»Ê±ĞèÒª¼ì²é
+		D3DFMT_INDEX16,         // [in] ç´¢å¼•ç¼“å†²åŒºæ ¼å¼,è®¾ç½®ä¸º16æˆ–è€…32ä½.è®¾ç½®ä¸º32ä½æ—¶éœ€è¦æ£€æŸ¥
 		D3DPOOL_MANAGED,
 		&IB,
 		0);
@@ -77,11 +77,11 @@ bool Setup()
 
 	// define unique vertices:
 	Vertex* vertices;
-    // ÕâÀïĞèÒªLockÊÇÒòÎªÉÏÃæÄÚ´æ³ØÉèÖÃÎªD3DPOOL_MANAGEDµÄÔ­Òò
-	VB->Lock( 0,                    // [in] Ëø¶¨»º³åÇøÏà¶ÔÓÚ»º³åÇøÆğµãµÄÆ«ÒÆ
-              0,                    // [in] ĞèÒªËø¶¨µÄ´óĞ¡,Èç¹ûÇ°Á½¸ö²ÎÊıÎª0,±íÊ¾Ëø¶¨È«²¿»º³åÇø
-              (void**)&vertices,    // [out] ³É¹¦Ëø¶¨µÄÄÚ´æµØÖ·
-              0);                   // [int] ¶ÁĞ´Ëø¶¨·½Ê½
+    // è¿™é‡Œéœ€è¦Lockæ˜¯å› ä¸ºä¸Šé¢å†…å­˜æ± è®¾ç½®ä¸ºD3DPOOL_MANAGEDçš„åŸå› 
+	VB->Lock( 0,                    // [in] é”å®šç¼“å†²åŒºç›¸å¯¹äºç¼“å†²åŒºèµ·ç‚¹çš„åç§»
+              0,                    // [in] éœ€è¦é”å®šçš„å¤§å°,å¦‚æœå‰ä¸¤ä¸ªå‚æ•°ä¸º0,è¡¨ç¤ºé”å®šå…¨éƒ¨ç¼“å†²åŒº
+              (void**)&vertices,    // [out] æˆåŠŸé”å®šçš„å†…å­˜åœ°å€
+              0);                   // [int] è¯»å†™é”å®šæ–¹å¼
 
 	// vertices of a unit cube
 	vertices[0] = Vertex(-1.0f, -1.0f, -1.0f);
@@ -100,7 +100,7 @@ bool Setup()
 	IB->Lock(0, 0, (void**)&indices, 0);
 
 	// front side
-	indices[0]  = 0; indices[1]  = 1; indices[2]  = 2; // Ö¸¶¨¶¥µãºÍË÷ÒıµÄ¶ÔÓ¦¹ØÏµ
+	indices[0]  = 0; indices[1]  = 1; indices[2]  = 2; // æŒ‡å®šé¡¶ç‚¹å’Œç´¢å¼•çš„å¯¹åº”å…³ç³»
 	indices[3]  = 0; indices[4]  = 2; indices[5]  = 3;
 
 	// back side
@@ -129,54 +129,54 @@ bool Setup()
 	// Position and aim the camera.
 	//
 
-	D3DXVECTOR3 position(0.0f, 0.0f, -5.0f);    // ÉèÖÃÑÛ¾¦µÄÎ»ÖÃ
-	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);       // ÉèÖÃÑÛ¾¦¿´µÄÊÓµã
-	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);           // Ò»°ã¶¼ÊÇYÖáµ¥Î»ÏòÁ¿
+	D3DXVECTOR3 position(0.0f, 0.0f, -5.0f);    // è®¾ç½®çœ¼ç›çš„ä½ç½®
+	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);       // è®¾ç½®çœ¼ç›çœ‹çš„è§†ç‚¹
+	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);           // ä¸€èˆ¬éƒ½æ˜¯Yè½´å•ä½å‘é‡
     D3DXMATRIX V;
    
-	D3DXMatrixLookAtLH(&V, &position, &target, &up); // »ñÈ¡ÊÓÍ¼¾ØÕó(¸Ã¾ØÕóºÍÉãÏñ»úÎ»ÖÃºÍ·½ÏòÏà¹Ø,ÆäÊµ¾ÍÊÇÖ¸¶¨ÉãÏñ»úµÄÎ»ÖÃ),Ä¬ÈÏÑÛ¾¦ÔÚÊÀ½ç×ø±êÔ­µã,ÑÛ¾¦ÍùÆÁÄ»ÀïÃæ¿´(ZÖáÕı·½Ïò)
+	D3DXMatrixLookAtLH(&V, &position, &target, &up); // è·å–è§†å›¾çŸ©é˜µ(è¯¥çŸ©é˜µå’Œæ‘„åƒæœºä½ç½®å’Œæ–¹å‘ç›¸å…³,å…¶å®å°±æ˜¯æŒ‡å®šæ‘„åƒæœºçš„ä½ç½®),é»˜è®¤çœ¼ç›åœ¨ä¸–ç•Œåæ ‡åŸç‚¹,çœ¼ç›å¾€å±å¹•é‡Œé¢çœ‹(Zè½´æ­£æ–¹å‘)
     
-    Device->SetTransform(D3DTS_VIEW, &V);// ÉèÖÃÊÓÍ¼¾ØÕó
+    Device->SetTransform(D3DTS_VIEW, &V);// è®¾ç½®è§†å›¾çŸ©é˜µ
     
     /*
-    ÕâÀïÊ¡ÂÔÈçÏÂ²½Öè:
-    1.ÉèÖÃ±³Ãæ²Ã¼ô·½Ê½
+    è¿™é‡Œçœç•¥å¦‚ä¸‹æ­¥éª¤:
+    1.è®¾ç½®èƒŒé¢è£å‰ªæ–¹å¼
     Device->SetRenderState(...);
-    2.ÉèÖÃ¹âÕÕ;
-    3.²Ã¼ô²»¿É¼ûÎïÆ·(drawÊ±Òª½øĞĞ);
+    2.è®¾ç½®å…‰ç…§;
+    3.è£å‰ªä¸å¯è§ç‰©å“(drawæ—¶è¦è¿›è¡Œ);
     */
 
 	//
 	// Set the projection matrix.
 	//
 
-    // ÉèÖÃÍ¶Ó°¾ØÕó,°Ñ3Î¬×ªÎª2Î¬
+    // è®¾ç½®æŠ•å½±çŸ©é˜µ,æŠŠ3ç»´è½¬ä¸º2ç»´
 	D3DXMATRIX proj;
-	D3DXMatrixPerspectiveFovLH(             // »ñµÃÖ¸¶¨µÄÍ¶Ó°¾ØÕó
-			&proj,                          // [out] Í¶Ó°¾ØÕó
-			D3DX_PI * 0.5f,                 // [in] ´¹Ö±ÊÓ½Ç·¶Î§,90¶È(¼´ÉÏÏÂ45¶È)
-			(float)Width / (float)Height,   // [in] ¿í¸ß±È
-			1.0f,                           // [in] ½üÃæ¾àÀë
-			1000.0f);                       // [in] Ô¶Ãæ¾àÀë
-	Device->SetTransform(D3DTS_PROJECTION, &proj); // ÉèÖÃÍ¶Ó°¾ØÕó
+	D3DXMatrixPerspectiveFovLH(             // è·å¾—æŒ‡å®šçš„æŠ•å½±çŸ©é˜µ
+			&proj,                          // [out] æŠ•å½±çŸ©é˜µ
+			D3DX_PI * 0.5f,                 // [in] å‚ç›´è§†è§’èŒƒå›´,90åº¦(å³ä¸Šä¸‹45åº¦)
+			(float)Width / (float)Height,   // [in] å®½é«˜æ¯”
+			1.0f,                           // [in] è¿‘é¢è·ç¦»
+			1000.0f);                       // [in] è¿œé¢è·ç¦»
+	Device->SetTransform(D3DTS_PROJECTION, &proj); // è®¾ç½®æŠ•å½±çŸ©é˜µ
 
     /*
-     ÕâÀïÃ»ÓĞÉèÖÃÊÓ¿Ú±ä»»¾ØÕó,setviewport(...)°Ñ2Î¬×ø±ê×ª»»ÎªÆÁÄ»×ø±ê
-     ×îºóµÄ¹âÕ¤»¯(¼ÆËãÃ¿¸öÈı½ÇĞÎÄÚµÄµãµÄÑÕÉ«) ¶¼Ê¡ÂÔÁË
-     ¹âÕ¤»¯Ò»°ã¶¼ÊÇÓ²¼şÍê³É,µ«ÊÇÎÒÃÇ¿ÉÒÔÉèÖÃ¹âÕ¤»¯µÄÒ»Ğ©×´Ì¬À´Ó°Ïì½á¹û
+     è¿™é‡Œæ²¡æœ‰è®¾ç½®è§†å£å˜æ¢çŸ©é˜µ,setviewport(...)æŠŠ2ç»´åæ ‡è½¬æ¢ä¸ºå±å¹•åæ ‡
+     æœ€åçš„å…‰æ …åŒ–(è®¡ç®—æ¯ä¸ªä¸‰è§’å½¢å†…çš„ç‚¹çš„é¢œè‰²) éƒ½çœç•¥äº†
+     å…‰æ …åŒ–ä¸€èˆ¬éƒ½æ˜¯ç¡¬ä»¶å®Œæˆ,ä½†æ˜¯æˆ‘ä»¬å¯ä»¥è®¾ç½®å…‰æ …åŒ–çš„ä¸€äº›çŠ¶æ€æ¥å½±å“ç»“æœ
     */
 
 	//
 	// Switch to wireframe mode.
 	//    
-	Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);// Ê¹ÓÃÏß¿òÏßÌõÀ´äÖÈ¾
+	Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);// ä½¿ç”¨çº¿æ¡†çº¿æ¡æ¥æ¸²æŸ“,è¿™ä¸ªå‡½æ•°å¯ä»¥è®¾ç½®å¾ˆå¤šæ¸²æŸ“çŠ¶æ€æ¥å½±å“å…‰æ …åŒ–æ“ä½œ
 
 	return true;
 }
 
 void Cleanup()
 {
-    // ÊÍ·Å¶¥µãºÍË÷Òı»º³åÇø
+    // é‡Šæ”¾é¡¶ç‚¹å’Œç´¢å¼•ç¼“å†²åŒº
 	d3d::Release<IDirect3DVertexBuffer9*>(VB);
 	d3d::Release<IDirect3DIndexBuffer9*>(IB);
 }
@@ -186,11 +186,11 @@ bool Display(float timeDelta)
 	if( Device )
 	{
 		//
-		// spin the cube:Ğı×ªÁ¢·½Ìå
+		// spin the cube:æ—‹è½¬ç«‹æ–¹ä½“
 		//
 		D3DXMATRIX Rx, Ry;
 
-		// rotate 45 degrees on x-axis,Ë³Ê±ÕëĞı×ª
+		// rotate 45 degrees on x-axis,é¡ºæ—¶é’ˆæ—‹è½¬
 		D3DXMatrixRotationX(&Rx, 3.14f / 4.0f);
 
 		// incremement y-rotation angle each frame
@@ -205,7 +205,7 @@ bool Display(float timeDelta)
 		// combine x- and y-axis rotation transformations.
 		D3DXMATRIX p = Rx * Ry;
 
-        // ±¾µØ×ø±ê±ä»»µ½ÊÀ½ç×ø±ê
+        // æœ¬åœ°åæ ‡å˜æ¢åˆ°ä¸–ç•Œåæ ‡
 		Device->SetTransform(D3DTS_WORLD, &p);
 
 		//
@@ -214,23 +214,23 @@ bool Display(float timeDelta)
 		Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
 		Device->BeginScene();
 
-        // ÉèÖÃÊı¾İÁ÷À´Ô´
-		Device->SetStreamSource(0,              // Ê¹ÓÃ0ºÅÊı¾İÁ÷
-                                VB,             // Òª¼ÓÔØµ½Á÷ÖĞµÄ¶¥µãÄÚ´æ
-                                0,              // äÖÈ¾Æ«ÒÆÁ¿
-                                sizeof(Vertex));// Ã¿¸öÔªËØµÄ×Ö½ÚÊı
-        // ÉèÖÃË÷Òı»º³åÇø
+        // è®¾ç½®æ•°æ®æµæ¥æº
+		Device->SetStreamSource(0,              // ä½¿ç”¨0å·æ•°æ®æµ
+                                VB,             // è¦åŠ è½½åˆ°æµä¸­çš„é¡¶ç‚¹å†…å­˜
+                                0,              // æ¸²æŸ“åç§»é‡
+                                sizeof(Vertex));// æ¯ä¸ªå…ƒç´ çš„å­—èŠ‚æ•°
+        // è®¾ç½®ç´¢å¼•ç¼“å†²åŒº
 		Device->SetIndices(IB);
-        // ÉèÖÃ¶¥µã¸ñÊ½
+        // è®¾ç½®é¡¶ç‚¹æ ¼å¼
 		Device->SetFVF(Vertex::FVF);
 
-		// Draw cube.½«¼¸ºÎĞÅÏ¢ËÍµ½äÖÈ¾¹ÜÏß
-		Device->DrawIndexedPrimitive( D3DPT_TRIANGLELIST,  // Í¼ÔªÀàĞÍ,ÕâÀïÊÇÈı½ÇĞÎ
-                                      0,                   // Ë÷Òı»ùÊı,ÓÃÓÚÖ¸¶¨Ä³¸ö¶¥µã»º³åÇø(»ØºÏ²¢µ½Ò»¸öÈ«¾ÖµÄ»º³åÇø,ËùÒÔÒªÖ¸¶¨)
-                                      0,                   // ÒıÓÃµÄ×îĞ¡Ë÷ÒıÖµ
-                                      8,                   // ÒªäÖÈ¾µÄ¶¥µãÊıÁ¿,ÕâÀïÊÇ8¸ö¶¥µã
-                                      0,                   // ´Ó»º³åÇø¶ÁÈ¡µÄµÚ¼¸¸öÔªËØ
-                                      12);                 // ÒªäÖÈ¾µÄÍ¼ÔªÊıÁ¿,ÕâÀïÊÇ12¸öÈı½ÇĞÎ
+		// Draw cube.å°†å‡ ä½•ä¿¡æ¯é€åˆ°æ¸²æŸ“ç®¡çº¿
+		Device->DrawIndexedPrimitive( D3DPT_TRIANGLELIST,  // å›¾å…ƒç±»å‹,è¿™é‡Œæ˜¯ä¸‰è§’å½¢
+                                      0,                   // ç´¢å¼•åŸºæ•°,ç”¨äºæŒ‡å®šæŸä¸ªé¡¶ç‚¹ç¼“å†²åŒº(å›åˆå¹¶åˆ°ä¸€ä¸ªå…¨å±€çš„ç¼“å†²åŒº,æ‰€ä»¥è¦æŒ‡å®š)
+                                      0,                   // å¼•ç”¨çš„æœ€å°ç´¢å¼•å€¼
+                                      8,                   // è¦æ¸²æŸ“çš„é¡¶ç‚¹æ•°é‡,è¿™é‡Œæ˜¯8ä¸ªé¡¶ç‚¹
+                                      0,                   // ä»ç¼“å†²åŒºè¯»å–çš„ç¬¬å‡ ä¸ªå…ƒç´ 
+                                      12);                 // è¦æ¸²æŸ“çš„å›¾å…ƒæ•°é‡,è¿™é‡Œæ˜¯12ä¸ªä¸‰è§’å½¢
 
 		Device->EndScene();
 		Device->Present(0, 0, 0, 0);
@@ -269,13 +269,13 @@ int WINAPI WinMain(HINSTANCE hinstance,
 	if(!d3d::InitD3D(hinstance,
 		Width, Height, true, D3DDEVTYPE_HAL, &Device))
 	{
-		::MessageBox(0, L"InitD3D() - FAILED", 0, 0);
+		::MessageBox(0, _T("InitD3D() - FAILED"), 0, 0);
 		return 0;
 	}
 		
 	if(!Setup())
 	{
-		::MessageBox(0, L"Setup() - FAILED", 0, 0);
+		::MessageBox(0, _T("Setup() - FAILED"), 0, 0);
 		return 0;
 	}
 

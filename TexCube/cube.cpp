@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
+ï»¿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // File: cube.cpp
 // 
@@ -31,7 +31,7 @@ Cube::Cube(IDirect3DDevice9* device)
 
 	// build box
 
-	// fill in the front face vertex data ÕâÀï²»Ö¸¶¨¶¥µãµÄË³Ðò,ÓÃË÷ÒýÖ¸¶¨!,ÆäÊµÕâÑù×ö¸ü¼ÓÈÝÒ×ÔÄ¶Á
+	// fill in the front face vertex data è¿™é‡Œä¸æŒ‡å®šé¡¶ç‚¹çš„é¡ºåº,ç”¨ç´¢å¼•æŒ‡å®š!,å…¶å®žè¿™æ ·åšæ›´åŠ å®¹æ˜“é˜…è¯»
 	v[0] = Vertex(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
 	v[1] = Vertex(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
 	v[2] = Vertex( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
@@ -56,7 +56,7 @@ Cube::Cube(IDirect3DDevice9* device)
 	v[15] = Vertex(-1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
 
 	// fill in the left face vertex data
-	v[16] = Vertex(-1.0f, -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f); // Õâ¸ö¶¥µãËäÈ»ÉÏÃæÓÐÁË,µ«ÊÇËûÃÇµÄ¶¥µã·¨ÏßÊÇ²»ÏàÍ¬µÄ!
+	v[16] = Vertex(-1.0f, -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f); // è¿™ä¸ªé¡¶ç‚¹è™½ç„¶ä¸Šé¢æœ‰äº†,ä½†æ˜¯ä»–ä»¬çš„é¡¶ç‚¹æ³•çº¿æ˜¯ä¸ç›¸åŒçš„!
 	v[17] = Vertex(-1.0f,  1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 	v[18] = Vertex(-1.0f,  1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 	v[19] = Vertex(-1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -125,13 +125,13 @@ bool Cube::draw(D3DXMATRIX* world, D3DMATERIAL9* mtrl, IDirect3DTexture9* tex)
 	_device->SetStreamSource(0, _vb, 0, sizeof(Vertex));
 	_device->SetIndices(_ib);
 	_device->SetFVF(FVF_VERTEX);
-	_device->DrawIndexedPrimitive(// Ê¹ÓÃË÷Òý»º³åÇøäÖÈ¾
+	_device->DrawIndexedPrimitive(// ä½¿ç”¨ç´¢å¼•ç¼“å†²åŒºæ¸²æŸ“
 		D3DPT_TRIANGLELIST, 
 		0,                  
 		0,                  
-		24, // äÖÈ¾24¸öË÷Òý¶¥µã
+		24, // æ¸²æŸ“24ä¸ªç´¢å¼•é¡¶ç‚¹
 		0,
-		12);  // äÖÈ¾12¸öÈý½ÇÐÎ
+		12);  // æ¸²æŸ“12ä¸ªä¸‰è§’å½¢
 
 	return true;
 }

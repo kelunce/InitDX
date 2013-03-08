@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
+ï»¿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // File: mtrlAlpha.cpp
 // 
@@ -11,7 +11,8 @@
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma comment(lib,"../Debug/comm.lib")
+// ä¸å†æ˜¾ç¤ºä½¿ç”¨comm.lib,æ”¹ä¸ºä½¿ç”¨é¡¹ç›®ä¾èµ–(vs2010ä¸­è¦è®¾ç½®ä¸ºå¼•ç”¨)
+//#pragma comment(lib,"../Debug/comm.lib")
 #include "../comm/d3dUtility.h"
 #include "vertex.h"
 #include "cube.h"
@@ -75,12 +76,12 @@ bool Setup()
 
 	D3DXCreateTextureFromFile(
 		Device,
-		L"cratewalpha.dds",     // Õâ¸öÎÄ¼şÊÇalphaÍ¨µÀÎÄ¼ş
+		_T("cratewalpha.dds"),     // è¿™ä¸ªæ–‡ä»¶æ˜¯alphaé€šé“æ–‡ä»¶
 		&CrateTex);
 
 	D3DXCreateTextureFromFile(
 		Device,
-		L"lobbyxpos.jpg",
+		_T("lobbyxpos.jpg"),
 		&BackDropTex);
 
 	Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
@@ -91,9 +92,9 @@ bool Setup()
 	// set alpha blending stuff
 	//
 
-	// use alpha channel in texture for alpha ´ÓÎÆÀíµÄalphaÍ¨µÀÖĞ»ñµÃalpha·ÖÁ¿
-	Device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);   // ´ÓÎÆÀíµÄalphaÍ¨µÀÖĞ»ñµÃalpha·ÖÁ¿
-	Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1); // ÉèÖÃalpha²Ù×÷²ÎÊı1
+	// use alpha channel in texture for alpha ä»çº¹ç†çš„alphaé€šé“ä¸­è·å¾—alphaåˆ†é‡
+	Device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);   // ä»çº¹ç†çš„alphaé€šé“ä¸­è·å¾—alphaåˆ†é‡
+	Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1); // è®¾ç½®alphaæ“ä½œå‚æ•°1
 
 	// set blending factors so that alpha component determines transparency
 	Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -163,7 +164,7 @@ bool Display(float timeDelta)
 		if( y >= 6.28f )
 			y = 0.0f;
 
-		CubeWorldMatrix = xRot * yRot;  // ºÏ²¢Ğı×ª
+		CubeWorldMatrix = xRot * yRot;  // åˆå¹¶æ—‹è½¬
 
 		//
 		// Render
@@ -224,13 +225,13 @@ int WINAPI WinMain(HINSTANCE hinstance,
 	if(!d3d::InitD3D(hinstance,
 		Width, Height, true, D3DDEVTYPE_HAL, &Device))
 	{
-		::MessageBox(0, L"InitD3D() - FAILED", 0, 0);
+		::MessageBox(0, _T("InitD3D() - FAILED"), 0, 0);
 		return 0;
 	}
 		
 	if(!Setup())
 	{
-		::MessageBox(0, L"Setup() - FAILED", 0, 0);
+		::MessageBox(0,  _T("Setup() - FAILED"), 0, 0);
 		return 0;
 	}
 

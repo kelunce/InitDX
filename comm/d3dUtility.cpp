@@ -36,23 +36,23 @@ MU_DECLSPEC bool d3d::InitD3D(
 	wc.hCursor       = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName  = 0;
-	wc.lpszClassName = L"Direct3D9App";
+	wc.lpszClassName = _T("Direct3D9App");
 
 	if( !RegisterClass(&wc) ) 
 	{
-		::MessageBox(0, L"RegisterClass() - FAILED", 0, 0);
+		::MessageBox(0, _T("RegisterClass() - FAILED"), 0, 0);
 		return false;
 	}
 		
 	HWND hwnd = 0;
-	hwnd = ::CreateWindow(L"Direct3D9App", L"Direct3D9App", 
+	hwnd = ::CreateWindow(_T("Direct3D9App"), _T("Direct3D9App"), 
 		WS_EX_TOPMOST,
 		0, 0, width, height,
 		0 /*parent hwnd*/, 0 /* menu */, hInstance, 0 /*extra*/); 
 
 	if( !hwnd )
 	{
-		::MessageBox(0, L"CreateWindow() - FAILED", 0, 0);
+		::MessageBox(0, _T("CreateWindow() - FAILED"), 0, 0);
 		return false;
 	}
 
@@ -72,7 +72,7 @@ MU_DECLSPEC bool d3d::InitD3D(
 
     if( !d3d9 )
 	{
-		::MessageBox(0, L"Direct3DCreate9() - FAILED", 0, 0);
+		::MessageBox(0, _T("Direct3DCreate9() - FAILED"), 0, 0);
 		return false;
 	}
 
@@ -104,6 +104,34 @@ MU_DECLSPEC bool d3d::InitD3D(
 	d3dpp.Flags                      = 0;                       // 附加特性，设为0 或D3DPRESENTFLAG 类型的一个成员
 	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT; // 刷新率，设定D3DPRESENT_RATE_DEFAULT使用默认刷新率
 	d3dpp.PresentationInterval       = D3DPRESENT_INTERVAL_IMMEDIATE;// 交换速度,属于D3DPRESENT成员,D3DPRESENT_INTERVAL_IMMEDIATE为立即交换
+   
+    //  检查设备反走样抗锯齿能力
+    D3DDISPLAYMODE displayMode;
+    if(FAILED(d3d9->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &displayMode)))
+        return false;
+    bool fullscreen = false;
+    D3DMULTISAMPLE_TYPE wMultiSampleType[] = { D3DMULTISAMPLE_NONE,
+        D3DMULTISAMPLE_NONMASKABLE,
+        D3DMULTISAMPLE_2_SAMPLES,
+        D3DMULTISAMPLE_3_SAMPLES,
+        D3DMULTISAMPLE_4_SAMPLES,
+        D3DMULTISAMPLE_5_SAMPLES,
+        D3DMULTISAMPLE_6_SAMPLES,
+        D3DMULTISAMPLE_7_SAMPLES,
+        D3DMULTISAMPLE_8_SAMPLES};
+
+    for ( int iIndex = 0; iIndex < sizeof(wMultiSampleType)/sizeof(wMultiSampleType[0]); ++iIndex)
+    {
+        // 检查是否支持N倍速率采样
+        if(d3d9->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,
+            D3DDEVTYPE_HAL, displayMode.Format, !fullscreen,
+            wMultiSampleType[iIndex],
+            NULL) == D3D_OK)
+        {
+            // 保存多采样类型
+            d3dpp.MultiSampleType = wMultiSampleType[iIndex];
+        }
+    }
 
 	// Step 4: Create the device.
 
@@ -131,7 +159,7 @@ MU_DECLSPEC bool d3d::InitD3D(
 		if( FAILED(hr) )
 		{
 			d3d9->Release(); // done with d3d9 object
-			::MessageBox(0, L"CreateDevice() - FAILED", 0, 0);
+			::MessageBox(0, _T("CreateDevice() - FAILED"), 0, 0);
 			return false;
 		}
 	}

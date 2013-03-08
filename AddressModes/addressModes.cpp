@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
+ï»¿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // File: addressModes.cpp
 // 
@@ -15,8 +15,10 @@
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma comment(lib,"../Debug/comm.lib")
+// ä¸å†æ˜¾ç¤ºä½¿ç”¨comm.lib,æ”¹ä¸ºä½¿ç”¨é¡¹ç›®ä¾èµ–(vs2010ä¸­è¦è®¾ç½®ä¸ºå¼•ç”¨)
+//#pragma comment(lib,"../Debug/comm.lib")
 #include "../comm/d3dUtility.h"
+
 
 //
 // Globals
@@ -73,8 +75,8 @@ bool Setup()
 	Vertex* v;
 	Quad->Lock(0, 0, (void**)&v, 0);
 
-	/* quad built from two triangles:ÓÃÁ½¸öÈý½ÇÐÎ¹¹½¨ËÄ±ßÐÎ
-       µ±¶¥µãµÄ×ø±ê³¬¹ý(0,1)·¶Î§Ê±,Ö®ºóµÄÎÆÀíÑ°Ö·²Å»áÆð×÷ÓÃ
+	/* quad built from two triangles:ç”¨ä¸¤ä¸ªä¸‰è§’å½¢æž„å»ºå››è¾¹å½¢
+       å½“é¡¶ç‚¹çš„åæ ‡è¶…è¿‡(0,1)èŒƒå›´æ—¶,ä¹‹åŽçš„çº¹ç†å¯»å€æ‰ä¼šèµ·ä½œç”¨
     */
 	v[0] = Vertex(-1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 3.0f);
 	v[1] = Vertex(-1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
@@ -92,7 +94,7 @@ bool Setup()
 
 	D3DXCreateTextureFromFile(
 		Device,
-		L"dx5_logo.bmp",
+		_T("dx5_logo.bmp"),
 		&Tex);
 
 	Device->SetTexture(0, Tex);
@@ -174,13 +176,13 @@ bool Display(float timeDelta)
 		Device->SetStreamSource(0, Quad, 0, sizeof(Vertex));
 		Device->SetFVF(Vertex::FVF);
 
-//         // »æÖÆµÚÒ»¸öÈý½ÇÐÎ
+//         // ç»˜åˆ¶ç¬¬ä¸€ä¸ªä¸‰è§’å½¢
 //         Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 1);
 // 
-//         // »æÖÆµÚ¶þ¸öÈý½ÇÐÎ
+//         // ç»˜åˆ¶ç¬¬äºŒä¸ªä¸‰è§’å½¢
 // 		Device->DrawPrimitive(D3DPT_TRIANGLELIST, 3, 1);
 
-        // Ò»ÌõÓï¾ä»æÖÆÁ½¸öÈý½ÇÐÎ
+        // ä¸€æ¡è¯­å¥ç»˜åˆ¶ä¸¤ä¸ªä¸‰è§’å½¢
         Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2);
 
         Device->EndScene();
@@ -220,13 +222,13 @@ int WINAPI WinMain(HINSTANCE hinstance,
 	if(!d3d::InitD3D(hinstance,
 		Width, Height, true, D3DDEVTYPE_HAL, &Device))
 	{
-		::MessageBox(0, L"InitD3D() - FAILED", 0, 0);
+		::MessageBox(0, _T("InitD3D() - FAILED"), 0, 0);
 		return 0;
 	}
 		
 	if(!Setup())
 	{
-		::MessageBox(0, L"Setup() - FAILED", 0, 0);
+		::MessageBox(0,  _T("Setup() - FAILED"), 0, 0);
 		return 0;
 	}
 

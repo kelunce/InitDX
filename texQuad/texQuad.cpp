@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
+ï»¿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // File: texQuad.cpp
 // 
@@ -11,20 +11,22 @@
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma comment(lib,"../Debug/comm.lib")
+// ä¸å†æ˜¾ç¤ºä½¿ç”¨comm.lib,æ”¹ä¸ºä½¿ç”¨é¡¹ç›®ä¾èµ–(vs2010ä¸­è¦è®¾ç½®ä¸ºå¼•ç”¨)
+//#pragma comment(lib,"../Debug/comm.lib")
 #include "../comm/d3dUtility.h"
+
 
 //
 // Globals
 //
 
-IDirect3DDevice9*     Device = 0; // D3DÉè±¸Ö¸Õë
+IDirect3DDevice9*     Device = 0; // D3Dè®¾å¤‡æŒ‡é’ˆ
 
-const int Width  = 640; // ´°¿Ú¿í¶È,µ¥Î»ÏñËØ
-const int Height = 480; // ´°¿Ú¸ß¶È,µ¥Î»ÏñËØ
+const int Width  = 640; // çª—å£å®½åº¦,å•ä½åƒç´ 
+const int Height = 480; // çª—å£é«˜åº¦,å•ä½åƒç´ 
 
-IDirect3DVertexBuffer9* Quad = 0;   // ¶¥µã»º³åÇø
-IDirect3DTexture9*      Tex  = 0;   // ÎÆÀí±íÃæ»º³åÇø
+IDirect3DVertexBuffer9* Quad = 0;   // é¡¶ç‚¹ç¼“å†²åŒº
+IDirect3DTexture9*      Tex  = 0;   // çº¹ç†è¡¨é¢ç¼“å†²åŒº
 
 //
 // Classes and Structures
@@ -48,7 +50,7 @@ struct Vertex
 
 	static const DWORD FVF;
 };
-const DWORD Vertex::FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1; // ÉèÖÃ¶¥µã¸ñÊ½,°üº¬×ø±ê_x, _y, _z °üº¬¶¥µã·¨Ïß_nx, _ny, _nz °üº¬ÎÆÀí×ø±ê_u, _v
+const DWORD Vertex::FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1; // è®¾ç½®é¡¶ç‚¹æ ¼å¼,åŒ…å«åæ ‡_x, _y, _z åŒ…å«é¡¶ç‚¹æ³•çº¿_nx, _ny, _nz åŒ…å«çº¹ç†åæ ‡_u, _v
 
 //
 // Framework Functions
@@ -60,7 +62,7 @@ bool Setup()
 	// quad geoemtry.
 	//
 
-	Device->CreateVertexBuffer( // ´´½¨¶¥µã»º³åÇø
+	Device->CreateVertexBuffer( // åˆ›å»ºé¡¶ç‚¹ç¼“å†²åŒº
 		6 * sizeof(Vertex), 
 		D3DUSAGE_WRITEONLY,
 		Vertex::FVF,
@@ -69,29 +71,29 @@ bool Setup()
 		0);
 
 	Vertex* v;
-	Quad->Lock(0, 0, (void**)&v, 0);    // ¶¥µã»º³åÇø²Ù×÷Ç°¶¼ÒªÉÏËø
+	Quad->Lock(0, 0, (void**)&v, 0);    // é¡¶ç‚¹ç¼“å†²åŒºæ“ä½œå‰éƒ½è¦ä¸Šé”
 
     /*
-        Èý½ÇÐÎÈý¸ö½Ç¶¨ÒåÎª:
+        ä¸‰è§’å½¢ä¸‰ä¸ªè§’å®šä¹‰ä¸º:
         1--------2[4]
         |         |
         |         |
         0[3]------[5]   
 
-        ÎÆÀíµÄ×ø±êÏµ¶¨ÒåÎª(u,v):
-       (0,0)------¡·u+
+        çº¹ç†çš„åæ ‡ç³»å®šä¹‰ä¸º(u,v):
+       (0,0)------ã€‹u+
         |
         |
-        ¦ç v+
+        ï¸¾ v+
     */
 	// quad built from two triangles, note texture coordinates:
-	v[0] = Vertex(-1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f); // ÎÆÀí×ø±êÊÇ(0.0f,1.0f), ¶¥µã·¨ÏßÊÇ(0,0,-1)
-	v[1] = Vertex(-1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f); // ÎÆÀí×ø±êÊÇ(0.0f,0.0f), ¶¥µã·¨ÏßÊÇ(0,0,-1)
-	v[2] = Vertex( 1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f); // ÎÆÀí×ø±êÊÇ(1.0f,0.0f), ¶¥µã·¨ÏßÊÇ(0,0,-1)
+	v[0] = Vertex(-1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f); // çº¹ç†åæ ‡æ˜¯(0.0f,1.0f), é¡¶ç‚¹æ³•çº¿æ˜¯(0,0,-1)
+	v[1] = Vertex(-1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f); // çº¹ç†åæ ‡æ˜¯(0.0f,0.0f), é¡¶ç‚¹æ³•çº¿æ˜¯(0,0,-1)
+	v[2] = Vertex( 1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f); // çº¹ç†åæ ‡æ˜¯(1.0f,0.0f), é¡¶ç‚¹æ³•çº¿æ˜¯(0,0,-1)
 
-	v[3] = Vertex(-1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f); // ÎÆÀí×ø±êÊÇ(0.0f,1.0f), ¶¥µã·¨ÏßÊÇ(0,0,-1)
-	v[4] = Vertex( 1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f); // ÎÆÀí×ø±êÊÇ(1.0f,0.0f), ¶¥µã·¨ÏßÊÇ(0,0,-1)
-	v[5] = Vertex( 1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f); // ÎÆÀí×ø±êÊÇ(1.0f,1.0f), ¶¥µã·¨ÏßÊÇ(0,0,-1)
+	v[3] = Vertex(-1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f); // çº¹ç†åæ ‡æ˜¯(0.0f,1.0f), é¡¶ç‚¹æ³•çº¿æ˜¯(0,0,-1)
+	v[4] = Vertex( 1.0f,  1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f); // çº¹ç†åæ ‡æ˜¯(1.0f,0.0f), é¡¶ç‚¹æ³•çº¿æ˜¯(0,0,-1)
+	v[5] = Vertex( 1.0f, -1.0f, 1.25f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f); // çº¹ç†åæ ‡æ˜¯(1.0f,1.0f), é¡¶ç‚¹æ³•çº¿æ˜¯(0,0,-1)
 
 	Quad->Unlock();
 
@@ -99,44 +101,44 @@ bool Setup()
 	// Create the texture and set filters.
 	//
 
-	D3DXCreateTextureFromFile(  //´ÓÎÄ¼þÖÐ¼ÓÔØÎÆÀí,Ò»°ãÓÎÏ·ÖÐÊ¹ÓÃÄÚ´æ¼ÓÔØµÄ,ÄÇÑù»á¸üÓÐÐ§ÂÊ
+	D3DXCreateTextureFromFile(  //ä»Žæ–‡ä»¶ä¸­åŠ è½½çº¹ç†,ä¸€èˆ¬æ¸¸æˆä¸­ä½¿ç”¨å†…å­˜åŠ è½½çš„,é‚£æ ·ä¼šæ›´æœ‰æ•ˆçŽ‡
 		Device,
-		L"dx5_logo.JPG",
+		_T("dx5_logo.JPG"),
 		&Tex);
 
-	Device->SetTexture(0, Tex);// ÉèÖÃÎªµ±Ç°ÎÆÀí
+	Device->SetTexture(0, Tex);// è®¾ç½®ä¸ºå½“å‰çº¹ç†
     
-	Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);// ÉèÖÃ·Å´ó¹ýÂË·½·¨ÎªÏßÐÔ¹ýÂË,ÈÃÎÆÀíÆ½»¬
+	Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);// è®¾ç½®æ”¾å¤§è¿‡æ»¤æ–¹æ³•ä¸ºçº¿æ€§è¿‡æ»¤,è®©çº¹ç†å¹³æ»‘
     
-	Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);// ÉèÖÃËõÐ¡¹ýÂË·½·¨ÎªÏßÐÔ¹ýÂË,ÈÃÎÆÀíÆ½»¬
+	Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);// è®¾ç½®ç¼©å°è¿‡æ»¤æ–¹æ³•ä¸ºçº¿æ€§è¿‡æ»¤,è®©çº¹ç†å¹³æ»‘
     
-	Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);// ÉèÖÃ¶àÎÆÀí¹ýÂË·½·¨,ÈÃÎÆÀíÆ½»¬
+	Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);// è®¾ç½®å¤šçº¹ç†è¿‡æ»¤æ–¹æ³•,è®©çº¹ç†å¹³æ»‘
 
 	//
 	// Don't use lighting for this sample.
 	//
-	Device->SetRenderState(D3DRS_LIGHTING, false);// ¹Ø±ÕµÆ¹â,Ä¬ÈÏµÆ¹âÊÇ´ò¿ªµÄ
+	Device->SetRenderState(D3DRS_LIGHTING, false);// å…³é—­ç¯å…‰,é»˜è®¤ç¯å…‰æ˜¯æ‰“å¼€çš„
 
 	//
 	// Set the projection matrix.
 	//
 
 	D3DXMATRIX proj;
-	D3DXMatrixPerspectiveFovLH( // »ñµÃÌØ¶¨Í¶Ó°Æ½Ãæ±ä»»¾ØÕó
-		&proj,  // [out] Êä³öÍ¶Ó°¾ØÕó
-		D3DX_PI * 0.5f, // 90 - degree ¸©Ñö45¶È½Ç
-		(float)Width / (float)Height,   // ³¤¿í±È
-		1.0f,   // ½üÃæ¾àÀë
-		1000.0f);   // Ô¶Ãæ¾àÀë
-	Device->SetTransform(D3DTS_PROJECTION, &proj);// ÉèÖÃÍ¶Ó°¾ØÕó
+	D3DXMatrixPerspectiveFovLH( // èŽ·å¾—ç‰¹å®šæŠ•å½±å¹³é¢å˜æ¢çŸ©é˜µ
+		&proj,  // [out] è¾“å‡ºæŠ•å½±çŸ©é˜µ
+		D3DX_PI * 0.5f, // 90 - degree ä¿¯ä»°45åº¦è§’
+		(float)Width / (float)Height,   // é•¿å®½æ¯”
+		1.0f,   // è¿‘é¢è·ç¦»
+		1000.0f);   // è¿œé¢è·ç¦»
+	Device->SetTransform(D3DTS_PROJECTION, &proj);// è®¾ç½®æŠ•å½±çŸ©é˜µ
 
 	return true;
 }
 
 void Cleanup()
 {
-	d3d::Release<IDirect3DVertexBuffer9*>(Quad); // ÊÍ·Å¶¥µã»º³åÇø,ºÍcomÓÃ·¨Ò»ÖÂ
-	d3d::Release<IDirect3DTexture9*>(Tex);  // ÊÍ·ÅÎÆÀí±íÃæ»º³åÇø
+	d3d::Release<IDirect3DVertexBuffer9*>(Quad); // é‡Šæ”¾é¡¶ç‚¹ç¼“å†²åŒº,å’Œcomç”¨æ³•ä¸€è‡´
+	d3d::Release<IDirect3DTexture9*>(Tex);  // é‡Šæ”¾çº¹ç†è¡¨é¢ç¼“å†²åŒº
 }
 
 bool Display(float timeDelta)
@@ -146,9 +148,9 @@ bool Display(float timeDelta)
 		Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
 		Device->BeginScene();
 
-		Device->SetStreamSource(0, Quad, 0, sizeof(Vertex));    // ÉèÖÃÁ÷Ê½Êý¾ÝÔ´
-		Device->SetFVF(Vertex::FVF);    // ÉèÖÃ¶¥µã¸ñÊ½
-		Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2);    //»æÖÆÁ½¸öÈý½ÇÐÎ
+		Device->SetStreamSource(0, Quad, 0, sizeof(Vertex));    // è®¾ç½®æµå¼æ•°æ®æº
+		Device->SetFVF(Vertex::FVF);    // è®¾ç½®é¡¶ç‚¹æ ¼å¼
+		Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2);    //ç»˜åˆ¶ä¸¤ä¸ªä¸‰è§’å½¢
 
 		Device->EndScene();
 		Device->Present(0, 0, 0, 0);
@@ -169,7 +171,7 @@ LRESULT CALLBACK d3d::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_KEYDOWN:
-		if( wParam == VK_ESCAPE )   // Esc¼ü
+		if( wParam == VK_ESCAPE )   // Escé”®
 			::DestroyWindow(hwnd);
 		break;
 	}
@@ -187,13 +189,13 @@ int WINAPI WinMain(HINSTANCE hinstance,
 	if(!d3d::InitD3D(hinstance,
 		Width, Height, true, D3DDEVTYPE_HAL, &Device))
 	{
-		::MessageBox(0, L"InitD3D() - FAILED", 0, 0);
+		::MessageBox(0,_T("InitD3D() - FAILED"), 0, 0);
 		return 0;
 	}
 
 	if(!Setup())
 	{
-		::MessageBox(0, L"Setup() - FAILED", 0, 0);
+		::MessageBox(0,  _T("Setup() - FAILED"), 0, 0);
 		return 0;
 	}
 

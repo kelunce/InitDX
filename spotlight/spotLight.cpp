@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // File: spotLight.cpp
 // 
@@ -11,7 +11,8 @@
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma comment(lib,"../Debug/comm.lib")
+// 不再显示使用comm.lib,改为使用项目依赖(vs2010中要设置为引用)
+//#pragma comment(lib,"../Debug/comm.lib")
 #include "../comm/d3dUtility.h"
 
 //
@@ -200,13 +201,13 @@ int WINAPI WinMain(HINSTANCE hinstance,
 	if(!d3d::InitD3D(hinstance,
 		Width, Height, true, D3DDEVTYPE_HAL, &Device))
 	{
-		::MessageBox(0, L"InitD3D() - FAILED", 0, 0);
+		::MessageBox(0, _T("InitD3D() - FAILED"), 0, 0);
 		return 0;
 	}
 		
 	if(!Setup())
 	{
-		::MessageBox(0, L"Setup() - FAILED", 0, 0);
+		::MessageBox(0,  _T("Setup() - FAILED"), 0, 0);
 		return 0;
 	}
 

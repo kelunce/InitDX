@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
+ï»¿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // File: mtrlAlpha.cpp
 // 
@@ -13,7 +13,8 @@
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma comment(lib,"../Debug/comm.lib")
+// ä¸å†æ˜¾ç¤ºä½¿ç”¨comm.lib,æ”¹ä¸ºä½¿ç”¨é¡¹ç›®ä¾èµ–(vs2010ä¸­è¦è®¾ç½®ä¸ºå¼•ç”¨)
+//#pragma comment(lib,"../Debug/comm.lib")
 #include "../comm/d3dUtility.h"
 
 //
@@ -25,12 +26,12 @@ IDirect3DDevice9* Device = 0;
 const int Width  = 640;
 const int Height = 480;
  
-ID3DXMesh*   Teapot = 0;    // ²èºøÍø¸ñÖ¸Õë,×¢ÒâÕâÊÇÒ»¸öcom¶ÔÏó
-D3DMATERIAL9 TeapotMtrl;    // ²èºø²ÄÁÏ
+ID3DXMesh*   Teapot = 0;    // èŒ¶å£¶ç½‘æ ¼æŒ‡é’ˆ,æ³¨æ„è¿™æ˜¯ä¸€ä¸ªcomå¯¹è±¡
+D3DMATERIAL9 TeapotMtrl;    // èŒ¶å£¶ææ–™
 
-IDirect3DVertexBuffer9* BkGndQuad = 0;  // ±³¾°¶¥µã»º³åÇø
+IDirect3DVertexBuffer9* BkGndQuad = 0;  // èƒŒæ™¯é¡¶ç‚¹ç¼“å†²åŒº
 IDirect3DTexture9*      BkGndTex  = 0;
-D3DMATERIAL9            BkGndMtrl;  // ±³¾°²ÄÁÏ
+D3DMATERIAL9            BkGndMtrl;  // èƒŒæ™¯ææ–™
 
 //
 // Classes and Structures
@@ -53,7 +54,7 @@ struct Vertex
 
 	static const DWORD FVF;
 };
-const DWORD Vertex::FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1; // ÕâÀïµÄÃèÊöË³ÐòÒªºÍ¶¥µãÊý¾Ý½á¹¹ÖÐÊôÐÔÃèÊöË³ÐòÒ»ÖÂ
+const DWORD Vertex::FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1; // è¿™é‡Œçš„æè¿°é¡ºåºè¦å’Œé¡¶ç‚¹æ•°æ®ç»“æž„ä¸­å±žæ€§æè¿°é¡ºåºä¸€è‡´
 
 //
 // Framework Functions
@@ -65,7 +66,7 @@ bool Setup()
 	//
 
 	TeapotMtrl = d3d::RED_MTRL;
-	TeapotMtrl.Diffuse.a = 0.5f; // set alpha to 50% opacity(Í¸Ã÷¶È50%,¼´°ëÍ¸Ã÷)
+	TeapotMtrl.Diffuse.a = 0.5f; // set alpha to 50% opacity(é€æ˜Žåº¦50%,å³åŠé€æ˜Ž)
 
 	BkGndMtrl = d3d::WHITE_MTRL;
 
@@ -76,7 +77,7 @@ bool Setup()
 	D3DXCreateTeapot(Device, &Teapot, 0);
 
 	//
-	// Create the background quad(ËÄ·½ÐÎ).
+	// Create the background quad(å››æ–¹å½¢).
 	//
 
 	Device->CreateVertexBuffer(
@@ -90,19 +91,19 @@ bool Setup()
 	Vertex* v;
 	BkGndQuad->Lock(0, 0, (void**)&v, 0);
 /*
-    µÚÒ»¸öÈý½ÇÐÎ:  £±£­£­£­£²
-                  £ü
-                  £ü
-                  £°
-   µÚ¶þ¸öÈý½ÇÐÎ:     £µ
-¡¡¡¡¡¡¡¡             £ü
-    ¡¡¡¡¡¡¡¡         £ü
-              £³£­£­-£´
+    ç¬¬ä¸€ä¸ªä¸‰è§’å½¢:  ï¼‘ï¼ï¼ï¼ï¼’
+                  ï½œ
+                  ï½œ
+                  ï¼
+   ç¬¬äºŒä¸ªä¸‰è§’å½¢:     ï¼•
+ã€€ã€€ã€€ã€€             ï½œ
+    ã€€ã€€ã€€ã€€         ï½œ
+              ï¼“ï¼ï¼-ï¼”
   
 */
 	v[0] = Vertex(-10.0f, -10.0f, 5.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[2] = Vertex(-10.0f,  10.0f, 5.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[1] = Vertex( 10.0f,  10.0f, 5.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
+	v[1] = Vertex(-10.0f,  10.0f, 5.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	v[2] = Vertex( 10.0f,  10.0f, 5.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
 
 	v[3] = Vertex(-10.0f, -10.0f, 5.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
 	v[4] = Vertex( 10.0f,  10.0f, 5.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
@@ -116,14 +117,14 @@ bool Setup()
 
 	D3DLIGHT9 dir;
 	::ZeroMemory(&dir, sizeof(dir));
-	dir.Type      = D3DLIGHT_DIRECTIONAL;   // Æ½ÐÐ¹â
-	dir.Diffuse   = d3d::WHITE;             // Âþ·´Éä¹âÑÕÉ«
-	dir.Specular  = d3d::WHITE * 0.2f;      // ¾µÃæ·´Éä¹âÑÕÉ«
-	dir.Ambient   = d3d::WHITE * 0.6f;      // »·¾³¹âÑÕÉ«
-	dir.Direction = D3DXVECTOR3(0.707f, 0.0f, 0.707f);  // µÆ¹â·½ÏòÓÒÇ°·½
+	dir.Type      = D3DLIGHT_DIRECTIONAL;   // å¹³è¡Œå…‰
+	dir.Diffuse   = d3d::WHITE;             // æ¼«åå°„å…‰é¢œè‰²
+	dir.Specular  = d3d::WHITE * 0.2f;      // é•œé¢åå°„å…‰é¢œè‰²
+	dir.Ambient   = d3d::WHITE * 0.6f;      // çŽ¯å¢ƒå…‰é¢œè‰²
+	dir.Direction = D3DXVECTOR3(0.707f, 0.0f, 0.707f);  // ç¯å…‰æ–¹å‘å³å‰æ–¹
 
-	Device->SetLight(0, &dir);   // ÉèÖÃ0ºÅµÆ¹â
-	Device->LightEnable(0, true);// ÆôÓÃ0ºÅµÆ¹â
+	Device->SetLight(0, &dir);   // è®¾ç½®0å·ç¯å…‰
+	Device->LightEnable(0, true);// å¯ç”¨0å·ç¯å…‰
 
 	Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);
 	Device->SetRenderState(D3DRS_SPECULARENABLE, true);
@@ -134,7 +135,7 @@ bool Setup()
 
 	D3DXCreateTextureFromFile(
 		Device,
-		L"crate.jpg",
+		_T("crate.jpg"),
 		&BkGndTex);
 
 	Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
@@ -142,28 +143,28 @@ bool Setup()
 	Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 
 	//
-	// Set alpha blending states. ÉèÖÃalpha»ìºÏ×´Ì¬
+	// Set alpha blending states. è®¾ç½®alphaæ··åˆçŠ¶æ€
 	//
 
-	// use alpha in material's diffuse component for alpha Ö¸¶¨Ê¹ÓÃ²ÄÖÊµÄÂþ·´ÉäÑÕÉ«µÄalpha·ÖÁ¿×÷Îªalpha·ÖÁ¿,±¾ÖÊÉÏÊÇÖ¸¶¨alpha·ÖÁ¿µÄÀ´Ô´
-	Device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);   // ÉèÖÃÎÆÀíalphaÖµ´Ó¶¥µãºÍ²ÄÖÊÖÐ¼ÆËã»ñµÃhttp://msdn.microsoft.com/zh-cn/library/ms886612.aspx
-	Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+	// use alpha in material's diffuse component for alpha æŒ‡å®šä½¿ç”¨æè´¨çš„æ¼«åå°„çš„alphaåˆ†é‡ä½œä¸ºalphaåˆ†é‡,æœ¬è´¨ä¸Šæ˜¯æŒ‡å®šalphaåˆ†é‡çš„æ¥æº
+	Device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);   // è®¾ç½®ç¬¬0å·çº¹ç†alphaå€¼ä»Žé¡¶ç‚¹å’Œæè´¨ä¸­è®¡ç®—èŽ·å¾—http://msdn.microsoft.com/zh-cn/library/ms886612.aspx
+	Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);// è¯¥å‡½æ•°è®¾ç½®ç¬¬0å·çº¹ç†æ¸²æŸ“çŠ¶æ€æ¥å½±å“çº¹ç†æ¸²æŸ“ç»“æžœ
 
 	// set blending factors so that alpha component determines transparency
-	Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);  // ÉèÖÃÔ´»ìºÏÒò×Ó, ±ØÐëÉèÎªD3DBLEND_SRCALPHA²ÅÄÜÈÃalpha·ÖÁ¿±íÊ¾Í¸Ã÷¶È
-	Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);  // ÉèÖÃÄ¿±ê»ìºÏÒò×Ó, ±ØÐëÉèÎªD3DBLEND_INVSRCALPHA²ÅÄÜÈÃalpha·ÖÁ¿±íÊ¾Í¸Ã÷¶È
+	Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);  // è®¾ç½®æºæ··åˆå› å­, å¿…é¡»è®¾ä¸ºD3DBLEND_SRCALPHAæ‰èƒ½è®©alphaåˆ†é‡è¡¨ç¤ºé€æ˜Žåº¦
+	Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);  // è®¾ç½®ç›®æ ‡æ··åˆå› å­, å¿…é¡»è®¾ä¸ºD3DBLEND_INVSRCALPHAæ‰èƒ½è®©alphaåˆ†é‡è¡¨ç¤ºé€æ˜Žåº¦
 
 	//
 	// Set camera.
 	//
 
-	D3DXVECTOR3 pos(0.0f, 0.0f, -3.0f);     // ÑÛ¾¦ÔÚÊÀ½ç×ø±êZÖá-3
-	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);   // ¿´Ô­µã
+	D3DXVECTOR3 pos(0.0f, 0.0f, -3.0f);     // çœ¼ç›åœ¨ä¸–ç•Œåæ ‡Zè½´-3
+	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);   // çœ‹åŽŸç‚¹
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 	D3DXMATRIX V;
 	D3DXMatrixLookAtLH(&V, &pos, &target, &up);
 
-	Device->SetTransform(D3DTS_VIEW, &V);// ÉèÖÃÊÓÍ¼¾ØÕó
+	Device->SetTransform(D3DTS_VIEW, &V);// è®¾ç½®è§†å›¾çŸ©é˜µ
 
 	//
 	// Set projection matrix.
@@ -197,8 +198,8 @@ bool Display(float timeDelta)
 		//
 
 		// increase/decrease alpha via keyboard input
-        static DWORD dwSetTime = timeGetTime(); // »ñÈ¡¿ª»úÊ±¼ä,µ¥Î»ºÁÃë
-        if(timeGetTime() - dwSetTime > 100)    // ·ÀÖ¹°´¼üÊ±¼ä³¤Ê±Í¸Ã÷¶È±ä»¯Ì«´ó
+        static DWORD dwSetTime = timeGetTime(); // èŽ·å–å¼€æœºæ—¶é—´,å•ä½æ¯«ç§’
+        if(timeGetTime() - dwSetTime > 100)    // é˜²æ­¢æŒ‰é”®æ—¶é—´é•¿æ—¶é€æ˜Žåº¦å˜åŒ–å¤ªå¤§
         {
             if( ::GetAsyncKeyState('A') & 0x8000f )
                 TeapotMtrl.Diffuse.a += 0.01f;
@@ -207,14 +208,14 @@ bool Display(float timeDelta)
             dwSetTime = timeGetTime();
         }
 
-		// force alpha to [0, 1] interval Ç¿ÖÆalphaÖµÖ»ÄÜÔÚ[0,1]·¶Î§
+		// force alpha to [0, 1] interval å¼ºåˆ¶alphaå€¼åªèƒ½åœ¨[0,1]èŒƒå›´
 		if(TeapotMtrl.Diffuse.a > 1.0f)
 			TeapotMtrl.Diffuse.a = 1.0f;
 		if(TeapotMtrl.Diffuse.a < 0.0f)
 			TeapotMtrl.Diffuse.a = 0.0f;
 
 		//
-		// Render äÖÈ¾
+		// Render æ¸²æŸ“
 		//
 
 		Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
@@ -231,15 +232,15 @@ bool Display(float timeDelta)
 		Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2);
 
 		// Draw the teapot
-		Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);   // ÆôÓÃalpha»ìºÏ,Ä¬ÈÏ¹Ø±Õ,±È½ÏºÄÐÔÄÜ,×îºÃÔÚäÖÈ¾Ê±¿ªÆôºÍ¹Ø±Õ
+		Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);   // å¯ç”¨alphaæ··åˆ,é»˜è®¤å…³é—­,æ¯”è¾ƒè€—æ€§èƒ½,æœ€å¥½åœ¨æ¸²æŸ“æ—¶å¼€å¯å’Œå…³é—­
 
-		D3DXMatrixScaling(&W, 1.5f, 1.5f, 1.5f);    // ·Å´ó1.5±¶
+		D3DXMatrixScaling(&W, 1.5f, 1.5f, 1.5f);    // æ”¾å¤§1.5å€
 		Device->SetTransform(D3DTS_WORLD, &W);
 		Device->SetMaterial(&TeapotMtrl);
-		Device->SetTexture(0, 0);   // ²»Ê¹ÓÃÎÆÀí
+		Device->SetTexture(0, 0);   // ä¸ä½¿ç”¨çº¹ç†
 		Teapot->DrawSubset(0);  
 
-		Device->SetRenderState(D3DRS_ALPHABLENDENABLE, false);  // // ¹Ø±Õalpha»ìºÏ
+		Device->SetRenderState(D3DRS_ALPHABLENDENABLE, false);  // // å…³é—­alphaæ··åˆ
 
 		Device->EndScene();
 		Device->Present(0, 0, 0, 0);
@@ -278,13 +279,13 @@ int WINAPI WinMain(HINSTANCE hinstance,
 	if(!d3d::InitD3D(hinstance,
 		Width, Height, true, D3DDEVTYPE_HAL, &Device))
 	{
-		::MessageBox(0, L"InitD3D() - FAILED", 0, 0);
+		::MessageBox(0, _T("InitD3D() - FAILED"), 0, 0);
 		return 0;
 	}
 		
 	if(!Setup())
 	{
-		::MessageBox(0, L"Setup() - FAILED", 0, 0);
+		::MessageBox(0,  _T("Setup() - FAILED"), 0, 0);
 		return 0;
 	}
 

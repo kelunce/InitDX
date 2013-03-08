@@ -1,7 +1,9 @@
-#pragma comment(lib,"../Debug/comm.lib")
+ï»¿// ä¸å†æ˜¾ç¤ºä½¿ç”¨comm.lib,æ”¹ä¸ºä½¿ç”¨é¡¹ç›®ä¾èµ–(vs2010ä¸­è¦è®¾ç½®ä¸ºå¼•ç”¨)
+//#pragma comment(lib,"../Debug/comm.lib")
 #include "../comm/d3dUtility.h"
 
-// ¶¥µã»º³åÇø
+
+// é¡¶ç‚¹ç¼“å†²åŒº
 IDirect3DVertexBuffer9 *Pyramid = 0;
 
 IDirect3DDevice9* Device = 0; 
@@ -31,7 +33,7 @@ bool Setup()
     Device->SetRenderState(D3DRS_LIGHTING,true);
     Device->CreateVertexBuffer(12 * sizeof(Vertex),D3DUSAGE_WRITEONLY,Vertex::FVF,D3DPOOL_MANAGED,&Pyramid,0);
 
-    // ÓÃ½ğ×ÖËşµÄ¶¥µãÊı¾İÌî³ä»º³åÇø
+    // ç”¨é‡‘å­—å¡”çš„é¡¶ç‚¹æ•°æ®å¡«å……ç¼“å†²åŒº
     Vertex* v;
     Pyramid->Lock(0, 0, (void**)&v, 0);
 
@@ -57,7 +59,7 @@ bool Setup()
 
     Pyramid->Unlock();
 
-    // ÉèÖÃ²ÄÁÏ
+    // è®¾ç½®ææ–™
     D3DMATERIAL9 mtrl;
     mtrl.Ambient  = d3d::WHITE;
     mtrl.Diffuse  = d3d::WHITE;
@@ -67,7 +69,7 @@ bool Setup()
 
     Device->SetMaterial(&mtrl);
 
-    // ÉèÖÃµÆ¹â
+    // è®¾ç½®ç¯å…‰
     D3DLIGHT9 dir;
     ::ZeroMemory(&dir, sizeof(dir));
     dir.Type      = D3DLIGHT_DIRECTIONAL;
@@ -80,8 +82,8 @@ bool Setup()
     Device->LightEnable(0, true);
 
     
-    Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);   // ÆôÓÃÖØĞÂ¹éÒ»»¯¶¥µã·¨ÏßÏòÁ¿,×¢Òâ¶¥µãµÄ¸ñÊ½°üº¬ÁËD3DFVF_NORMAL
-    Device->SetRenderState(D3DRS_SPECULARENABLE, true);     // ÆôÓÃ¾µÃæ¹â¼ÆËã
+    Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);   // å¯ç”¨é‡æ–°å½’ä¸€åŒ–é¡¶ç‚¹æ³•çº¿å‘é‡,æ³¨æ„é¡¶ç‚¹çš„æ ¼å¼åŒ…å«äº†D3DFVF_NORMAL
+    Device->SetRenderState(D3DRS_SPECULARENABLE, true);     // å¯ç”¨é•œé¢å…‰è®¡ç®—
 
     //
     // Position and aim the camera.
@@ -184,13 +186,13 @@ int WINAPI WinMain(HINSTANCE hinstance,
     if(!d3d::InitD3D(hinstance,
         Width, Height, true, D3DDEVTYPE_HAL, &Device))
     {
-        ::MessageBox(0, L"InitD3D() - FAILED", 0, 0);
+        ::MessageBox(0, _T("InitD3D() - FAILED"), 0, 0);
         return 0;
     }
 
     if(!Setup())
     {
-        ::MessageBox(0, L"Setup() - FAILED", 0, 0);
+        ::MessageBox(0,  _T("Setup() - FAILED"), 0, 0);
         return 0;
     }
 
