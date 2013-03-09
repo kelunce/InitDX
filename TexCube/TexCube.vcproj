@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="7TexCube"
+	Name="07TexCube"
 	ProjectGUID="{732B1B16-87BC-4BFC-9254-62701E6F731A}"
 	RootNamespace="TexCube"
 	Keyword="Win32Proj"
@@ -21,6 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\lcm_d3d.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include\&quot;"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

@@ -89,21 +89,21 @@ MU_DECLSPEC bool d3d::InitD3D(
 
 	// Step 3: Fill out the D3DPRESENT_PARAMETERS structure.
  
-	D3DPRESENT_PARAMETERS d3dpp;
-	d3dpp.BackBufferWidth            = width;                   // 后备缓冲表面的宽度（以像素为单位）
-	d3dpp.BackBufferHeight           = height;                  // 后备缓冲表面的高度（以像素为单位）
-	d3dpp.BackBufferFormat           = D3DFMT_A8R8G8B8;         // 后备缓冲表面的像素格式
-	d3dpp.BackBufferCount            = 1;                       // 后备缓冲表面的数量，通常设为“1”，即只有一个后备表面
-	d3dpp.MultiSampleType            = D3DMULTISAMPLE_NONE;     // 全屏抗锯齿的类型,即重采样类型
-	d3dpp.MultiSampleQuality         = 0;                       // 全屏抗锯齿的质量等级,重采样级别
-	d3dpp.SwapEffect                 = D3DSWAPEFFECT_DISCARD;   // 指定表面在交换链中是如何被交换的,常用为D3DSWAPEFFECT_DISCARD
-	d3dpp.hDeviceWindow              = hwnd;                    // 渲染窗口句柄
-	d3dpp.Windowed                   = windowed;                // 指定是否窗口模式
-	d3dpp.EnableAutoDepthStencil     = true;                    // 设为true，D3D 将自动创建深度/模版缓冲区，并且自动管理
-	d3dpp.AutoDepthStencilFormat     = D3DFMT_D24S8;            // 深度/模版缓冲的格式,如D3DFMT_D24S8指定深度/模板缓冲区分别为24位和8位
-	d3dpp.Flags                      = 0;                       // 附加特性，设为0 或D3DPRESENTFLAG 类型的一个成员
-	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT; // 刷新率，设定D3DPRESENT_RATE_DEFAULT使用默认刷新率
-	d3dpp.PresentationInterval       = D3DPRESENT_INTERVAL_IMMEDIATE;// 交换速度,属于D3DPRESENT成员,D3DPRESENT_INTERVAL_IMMEDIATE为立即交换
+	D3DPRESENT_PARAMETERS g_d3dpp;  // D3D初始化参数
+	g_d3dpp.BackBufferWidth            = width;                   // 后备缓冲表面的宽度（以像素为单位）
+	g_d3dpp.BackBufferHeight           = height;                  // 后备缓冲表面的高度（以像素为单位）
+	g_d3dpp.BackBufferFormat           = D3DFMT_A8R8G8B8;         // 后备缓冲表面的像素格式
+	g_d3dpp.BackBufferCount            = 1;                       // 后备缓冲表面的数量，通常设为“1”，即只有一个后备表面
+	g_d3dpp.MultiSampleType            = D3DMULTISAMPLE_NONE;     // 全屏抗锯齿的类型,即重采样类型
+	g_d3dpp.MultiSampleQuality         = 0;                       // 全屏抗锯齿的质量等级,重采样级别
+	g_d3dpp.SwapEffect                 = D3DSWAPEFFECT_DISCARD;   // 指定表面在交换链中是如何被交换的,常用为D3DSWAPEFFECT_DISCARD
+	g_d3dpp.hDeviceWindow              = hwnd;                    // 渲染窗口句柄
+	g_d3dpp.Windowed                   = windowed;                // 指定是否窗口模式
+	g_d3dpp.EnableAutoDepthStencil     = true;                    // 设为true，D3D 将自动创建深度/模版缓冲区，并且自动管理
+	g_d3dpp.AutoDepthStencilFormat     = D3DFMT_D24S8;            // 深度/模版缓冲的格式,如D3DFMT_D24S8指定深度/模板缓冲区分别为24位和8位
+	g_d3dpp.Flags                      = 0;                       // 附加特性，设为0 或D3DPRESENTFLAG 类型的一个成员
+	g_d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT; // 刷新率，设定D3DPRESENT_RATE_DEFAULT使用默认刷新率
+	g_d3dpp.PresentationInterval       = D3DPRESENT_INTERVAL_IMMEDIATE;// 交换速度,属于D3DPRESENT成员,D3DPRESENT_INTERVAL_IMMEDIATE为立即交换
    
     //  检查设备反走样抗锯齿能力
     D3DDISPLAYMODE displayMode;
@@ -129,7 +129,7 @@ MU_DECLSPEC bool d3d::InitD3D(
             NULL) == D3D_OK)
         {
             // 保存多采样类型
-            d3dpp.MultiSampleType = wMultiSampleType[iIndex];
+            g_d3dpp.MultiSampleType = wMultiSampleType[iIndex];
         }
     }
 
@@ -140,20 +140,20 @@ MU_DECLSPEC bool d3d::InitD3D(
 		deviceType,         // [in] device type 设备类型，一般是D3DDEVTYPE_HAL
 		hwnd,               // [in] window associated with device
 		vp,                 // [in] vertex processing
-	    &d3dpp,             // [in] present parameters
+	    &g_d3dpp,             // [in] present parameters
 	    device);            // [out] return created device
 
 	if( FAILED(hr) )
 	{
 		// try again using a 16-bit depth buffer
-		d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+		g_d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
 		
 		hr = d3d9->CreateDevice(
 			D3DADAPTER_DEFAULT,
 			deviceType,
 			hwnd,
 			vp,
-			&d3dpp,
+			&g_d3dpp,
 			device);
 
 		if( FAILED(hr) )
@@ -256,4 +256,61 @@ MU_DECLSPEC D3DMATERIAL9 d3d::InitMtrl( D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D
     mtrl.Power = p;     // 镜面高光的集中度,值越大,高光区域越小
     mtrl.Specular = s;  // 镜面光反射率
     return mtrl;
+}
+
+d3d::CalcFPS::CalcFPS(IDirect3DDevice9* Device,const int nWidth,const int Height)
+{
+    m_nWidth = nWidth;
+    m_nHeight = Height;
+    m_bInit = false;
+    m_Font = 0;
+    m_dwFrameCnt = 0;
+    m_fTimeElapsed = 0.0f;
+    ZeroMemory(m_FPSString,sizeof(m_FPSString));
+
+    if(Device == 0) return ;
+
+    if (FAILED(D3DXCreateFont(Device,25,12,500,1,FALSE,0,0,0,0, _T("Times New Roman"),&m_Font)))
+    {
+        return ;
+    }
+
+
+    m_bInit = true;
+
+}
+d3d::CalcFPS::~CalcFPS()
+{
+    d3d::Release<ID3DXFont*>(m_Font);
+}
+
+void d3d::CalcFPS::DrawFPS(float timeDelta)
+{
+    if(!m_bInit) return ;
+
+    m_dwFrameCnt++;
+
+    m_fTimeElapsed += timeDelta;
+
+    if(m_fTimeElapsed >= 1.0f)
+    {
+        float fFPS = (float)m_dwFrameCnt / m_fTimeElapsed;
+
+        swprintf(m_FPSString, _T("FPS:%8.4f"), fFPS);// 这里要限制长度,否则容易溢出
+
+        int nLen = sizeof(m_FPSString)/sizeof(m_FPSString[0]);
+        m_FPSString[nLen-1] = _T('\0'); // mark end of string,其实swprintf会在结尾加这个
+
+        m_fTimeElapsed = 0.0f;
+        m_dwFrameCnt    = 0;
+    }
+
+    RECT rect = {0, 0, m_nWidth, m_nHeight};
+    m_Font->DrawText(         // 使用ID3DXFont输出文字
+        0,                  // 精灵,新版DX9新增参数 
+        m_FPSString,          // 准备输出的字符串
+        -1,                 // size of string or -1 indicates null terminating string
+        &rect,              // rectangle text is to be formatted to in windows coords
+        DT_TOP | DT_LEFT,   // draw in the top left corner of the viewport
+        0xFFF00F0F); 
 }

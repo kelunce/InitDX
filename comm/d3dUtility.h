@@ -91,6 +91,23 @@ namespace d3d
     const D3DMATERIAL9 GREEN_MTRL  = InitMtrl(GREEN, GREEN, GREEN, BLACK, 2.0f);    // 反射绿光,即物体是绿色的,其他颜色都被吸收
     const D3DMATERIAL9 BLUE_MTRL   = InitMtrl(BLUE, BLUE, BLUE, BLACK, 2.0f);       // 反射蓝光,即物体是蓝色的,其他颜色都被吸收
     const D3DMATERIAL9 YELLOW_MTRL = InitMtrl(YELLOW, YELLOW, YELLOW, BLACK, 2.0f); // 反射黄光,即物体是黄色的,其他颜色都被吸收
+
+
+    class CalcFPS
+    {
+    public:
+        CalcFPS(IDirect3DDevice9* Device,const int nWidth,const int Height);
+        virtual ~CalcFPS();
+        void DrawFPS(float timeDelta);
+    private:
+        bool    m_bInit;        // 是否成功初始化
+        ID3DXFont* m_Font;      // 显示字体
+        DWORD m_dwFrameCnt;     // 当前秒的帧数
+        float m_fTimeElapsed;   // 当前耗时,单位秒        
+        TCHAR m_FPSString[16];  // 上一秒FPS值字符串格式
+        int m_nWidth;
+        int m_nHeight;
+    };
 }
 
 #endif // __d3dUtilityH__

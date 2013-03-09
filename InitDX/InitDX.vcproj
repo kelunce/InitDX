@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="2InitDX"
+	Name="02InitDX"
 	ProjectGUID="{9DA75AF3-8394-4F47-8E4D-687DAC50EE17}"
 	RootNamespace="InitDX"
 	Keyword="Win32Proj"
@@ -21,6 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\lcm_d3d.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include\&quot;"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

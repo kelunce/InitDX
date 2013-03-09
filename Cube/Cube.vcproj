@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="4Cube"
+	Name="04Cube"
 	ProjectGUID="{C45E1911-DF4A-4838-A63C-E3932A86FC97}"
 	RootNamespace="4Cube"
 	Keyword="Win32Proj"
@@ -21,6 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\lcm_d3d.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include\&quot;"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,7 +65,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/Cube.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/Cube.pdb"
 				SubSystem="2"

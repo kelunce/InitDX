@@ -14,7 +14,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // 不再显示使用comm.lib,改为使用项目依赖(vs2010中要设置为引用)
 //#pragma comment(lib,"../Debug/comm.lib")
-#include "../../comm/d3dUtility.h"
+#include "d3dUtility.h"
 
 //
 // Globals
@@ -50,8 +50,7 @@ bool Display(float timeDelta)
                         0                                   //设置模版缓冲的值
                         );
 
-        //页面切换，显示后缓冲区内容
-        Device->Present(0, 0, 0, 0);
+        Device->Present(0, 0, 0, 0);//页面切换，显示后缓冲区内容,如果这里失败了,就是设备丢失了,不能渲染了,要进行重置等操作
     }
     return true;
 }

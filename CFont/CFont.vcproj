@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="07texQuad"
-	ProjectGUID="{AD60D5E9-D3C7-4365-83E6-D5484939645A}"
-	RootNamespace="texQuad"
+	Name="10CFont"
+	ProjectGUID="{4B6B1459-5260-4D95-B1F1-9D01C510A829}"
+	RootNamespace="CFont"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -42,7 +42,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +62,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -95,6 +93,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\lcm_d3d.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -174,7 +173,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\texQuad.cpp"
+				RelativePath=".\cfont.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\d3dfont.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\d3dutil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\dxutil.cpp"
 				>
 			</File>
 		</Filter>
@@ -183,6 +194,18 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\d3dfont.h"
+				>
+			</File>
+			<File
+				RelativePath=".\d3dutil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\dxutil.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="0comm"
+	Name="00comm"
 	ProjectGUID="{2C49E5DD-E5A8-4653-BF51-6A7C558965AA}"
 	RootNamespace="comm"
 	Keyword="ManagedCProj"

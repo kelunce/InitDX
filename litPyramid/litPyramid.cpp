@@ -1,6 +1,6 @@
 ﻿// 不再显示使用comm.lib,改为使用项目依赖(vs2010中要设置为引用)
 //#pragma comment(lib,"../Debug/comm.lib")
-#include "../comm/d3dUtility.h"
+#include "d3dUtility.h"
 
 
 // 顶点缓冲区

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="lcm_d3d"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include\&quot;;G:\DXDemon\InitDX\comm"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
+	/>
+</VisualStudioPropertySheet>

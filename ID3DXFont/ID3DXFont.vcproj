@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="07texQuad"
-	ProjectGUID="{AD60D5E9-D3C7-4365-83E6-D5484939645A}"
-	RootNamespace="texQuad"
+	Name="10ID3DXFont"
+	ProjectGUID="{A1DB8809-0201-4C45-81ED-AECB6C3A443D}"
+	RootNamespace="ID3DXFont"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -174,7 +174,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\texQuad.cpp"
+				RelativePath=".\id3dxfont.cpp"
 				>
 			</File>
 		</Filter>
