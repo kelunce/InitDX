@@ -20,12 +20,13 @@
 #pragma comment(lib,"d3dx9.lib");
 #pragma comment(lib,"winmm.lib"); 
 
+// 为了使用_T宏,因为L宏是不管是否在UNICODE环境下都把字符转换为UNICODE,但是_T宏会根据环境变化而变化
+#include <tchar.h>
 
 #include <d3dx9.h>
 #include <string>
 
-// 为了使用_T宏,因为L宏是不管是否在UNICODE环境下都把字符转换为UNICODE,但是_T宏会根据环境变化而变化
-#include <tchar.h>
+
 
 #ifdef BUILD_EXPORT
 #define MU_DECLSPEC	__declspec(dllexport)
