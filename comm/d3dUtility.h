@@ -25,32 +25,27 @@
 
 #include <d3dx9.h>
 #include <string>
+#include <fstream>
 
 
-
-#ifdef BUILD_EXPORT
-#define MU_DECLSPEC	__declspec(dllexport)
-#else
-#define MU_DECLSPEC/*	__declspec(dllimport)*/
-#endif
 
 namespace d3d
 {
-        MU_DECLSPEC	bool InitD3D(
-		HINSTANCE hInstance,       // [in] Application instance.
-		int width, int height,     // [in] Backbuffer dimensions.
-		bool windowed,             // [in] Windowed (true)or full screen (false).
-		D3DDEVTYPE deviceType,     // [in] HAL or REF
-		IDirect3DDevice9** device);// [out]The created device.
+    bool InitD3D(
+	HINSTANCE hInstance,       // [in] Application instance.
+	int width, int height,     // [in] Backbuffer dimensions.
+	bool windowed,             // [in] Windowed (true)or full screen (false).
+	D3DDEVTYPE deviceType,     // [in] HAL or REF
+	IDirect3DDevice9** device);// [out]The created device.
 
-	    MU_DECLSPEC int EnterMsgLoop( 
-		bool (*ptr_display)(float timeDelta));
+    int EnterMsgLoop( 
+	bool (*ptr_display)(float timeDelta));
 
-	    MU_DECLSPEC LRESULT CALLBACK WndProc(
-		HWND hwnd,
-		UINT msg, 
-		WPARAM wParam,
-		LPARAM lParam);
+    LRESULT CALLBACK WndProc(
+	HWND hwnd,
+	UINT msg, 
+	WPARAM wParam,
+	LPARAM lParam);
 
 	template<class T> void Release(T t)
 	{
@@ -81,12 +76,12 @@ namespace d3d
 	const D3DXCOLOR    MAGENTA( D3DCOLOR_XRGB(255,   0, 255) );
 
     // 常用光源定义
-    MU_DECLSPEC D3DLIGHT9 InitDirectionalLight(D3DXVECTOR3 *direction,D3DXCOLOR *color);                // 简单的平行光光源
-    MU_DECLSPEC D3DLIGHT9 InitPointLight(D3DXVECTOR3 *position,D3DXCOLOR *color);                       // 点光源
-    MU_DECLSPEC D3DLIGHT9 InitSpotLight(D3DXVECTOR3 *position,D3DXVECTOR3 *direction,D3DXCOLOR *color); // 聚光灯光源
+    D3DLIGHT9 InitDirectionalLight(D3DXVECTOR3 *direction,D3DXCOLOR *color);                // 简单的平行光光源
+    D3DLIGHT9 InitPointLight(D3DXVECTOR3 *position,D3DXCOLOR *color);                       // 点光源
+    D3DLIGHT9 InitSpotLight(D3DXVECTOR3 *position,D3DXVECTOR3 *direction,D3DXCOLOR *color); // 聚光灯光源
 
     // 常用材料定义
-    MU_DECLSPEC D3DMATERIAL9 InitMtrl(D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e, float p);
+    D3DMATERIAL9 InitMtrl(D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e, float p);
     const D3DMATERIAL9 WHITE_MTRL  = InitMtrl(WHITE, WHITE, WHITE, BLACK, 2.0f);    // 反射白光,即物体是白色的,什么颜色的光都反射
     const D3DMATERIAL9 RED_MTRL    = InitMtrl(RED, RED, RED, BLACK, 2.0f);          // 反射红光,即物体是红色的,其他颜色都被吸收
     const D3DMATERIAL9 GREEN_MTRL  = InitMtrl(GREEN, GREEN, GREEN, BLACK, 2.0f);    // 反射绿光,即物体是绿色的,其他颜色都被吸收
@@ -109,6 +104,60 @@ namespace d3d
         int m_nWidth;
         int m_nHeight;
     };
+
+    // 两个浮点型数据相等的最小误差
+    const float EPSILON = 0.001F;
+    // 比较浮点型相等
+    bool FloatEquals(float &lhs, float &rhs);
+
+
+    class CDumpMeshInfo
+    {
+    public:
+        // 这个类仅仅支持下面的顶点格式的网格对象
+        struct Vertex
+        {
+            Vertex(){}
+            Vertex(float x, float y, float z, 
+                float nx, float ny, float nz, float u, float v)
+            {
+                _x = x;   _y = y;   _z = z;
+                _nx = nx; _ny = ny; _nz = nz;
+                _u = u;   _v = v;
+            }
+
+            float _x, _y, _z, _nx, _ny, _nz, _u, _v;
+
+            static const DWORD FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1;
+        };
+    private:
+        std::wofstream m_OutFile; // used to dump mesh data to file
+        bool CheckStreamValid(){ return m_OutFile.is_open();}
+    public:
+        CDumpMeshInfo(){};
+        ~CDumpMeshInfo()
+        {
+            if(m_OutFile.is_open())
+                m_OutFile.close();
+        }
+        //
+        // Prototypes
+        //
+        // 打开新建文件 [LCM 3/26/2013 ]
+        bool Open(LPCTSTR lpFileName);
+        // 输出网格顶点
+        bool dumpVertices(ID3DXMesh* mesh);
+        // 输出网格索引
+        bool dumpIndices(ID3DXMesh* mesh);
+        // 输出属性缓冲区
+        bool dumpAttributeBuffer(ID3DXMesh* mesh);
+        // 输出邻接信息
+        bool dumpAdjacencyBuffer(ID3DXMesh* mesh);
+        // 输出属性表
+        bool dumpAttributeTable(ID3DXMesh* mesh);
+    };
+
+
 }
 
 #endif // __d3dUtilityH__

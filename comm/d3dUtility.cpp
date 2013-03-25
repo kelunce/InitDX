@@ -13,8 +13,11 @@
 
 
 #include "d3dUtility.h"
+#include <math.h>
+#include <vector>
 
-MU_DECLSPEC bool d3d::InitD3D(
+
+bool d3d::InitD3D(
 	HINSTANCE hInstance,
 	int width, int height,
 	bool windowed,
@@ -169,7 +172,7 @@ MU_DECLSPEC bool d3d::InitD3D(
 	return true;
 }
 
-MU_DECLSPEC int d3d::EnterMsgLoop( bool (*ptr_display)(float timeDelta) )
+int d3d::EnterMsgLoop( bool (*ptr_display)(float timeDelta) )
 {
 	MSG msg;
 	::ZeroMemory(&msg, sizeof(MSG));
@@ -197,7 +200,7 @@ MU_DECLSPEC int d3d::EnterMsgLoop( bool (*ptr_display)(float timeDelta) )
     return msg.wParam;
 }
 
-MU_DECLSPEC D3DLIGHT9 d3d::InitDirectionalLight( D3DXVECTOR3 *direction,D3DXCOLOR *color )
+D3DLIGHT9 d3d::InitDirectionalLight( D3DXVECTOR3 *direction,D3DXCOLOR *color )
 {
     D3DLIGHT9 light;
     ZeroMemory(&light,sizeof(D3DLIGHT9));
@@ -209,7 +212,7 @@ MU_DECLSPEC D3DLIGHT9 d3d::InitDirectionalLight( D3DXVECTOR3 *direction,D3DXCOLO
     return light;
 }
 
-MU_DECLSPEC D3DLIGHT9 d3d::InitPointLight( D3DXVECTOR3 *position,D3DXCOLOR *color )
+D3DLIGHT9 d3d::InitPointLight( D3DXVECTOR3 *position,D3DXCOLOR *color )
 {
     D3DLIGHT9 light;
     ZeroMemory(&light,sizeof(D3DLIGHT9));
@@ -225,7 +228,7 @@ MU_DECLSPEC D3DLIGHT9 d3d::InitPointLight( D3DXVECTOR3 *position,D3DXCOLOR *colo
     return light;
 }
 
-MU_DECLSPEC D3DLIGHT9 d3d::InitSpotLight( D3DXVECTOR3 *position,D3DXVECTOR3 *direction,D3DXCOLOR *color )
+D3DLIGHT9 d3d::InitSpotLight( D3DXVECTOR3 *position,D3DXVECTOR3 *direction,D3DXCOLOR *color )
 {
     D3DLIGHT9 light;
     ZeroMemory(&light,sizeof(D3DLIGHT9));
@@ -247,7 +250,7 @@ MU_DECLSPEC D3DLIGHT9 d3d::InitSpotLight( D3DXVECTOR3 *position,D3DXVECTOR3 *dir
     return light;
 }
 
-MU_DECLSPEC D3DMATERIAL9 d3d::InitMtrl( D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e, float p )
+D3DMATERIAL9 d3d::InitMtrl( D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e, float p )
 {
     D3DMATERIAL9 mtrl;
     mtrl.Ambient = a;   // 环境光反射率
@@ -258,6 +261,10 @@ MU_DECLSPEC D3DMATERIAL9 d3d::InitMtrl( D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D
     return mtrl;
 }
 
+bool d3d::FloatEquals(float &lhs, float &rhs)
+{
+    return fabs(lhs - rhs) < EPSILON? true:false;
+}
 d3d::CalcFPS::CalcFPS(IDirect3DDevice9* Device,const int nWidth,const int Height)
 {
     m_nWidth = nWidth;
@@ -313,4 +320,157 @@ void d3d::CalcFPS::DrawFPS(float timeDelta)
         &rect,              // rectangle text is to be formatted to in windows coords
         DT_TOP | DT_LEFT,   // draw in the top left corner of the viewport
         0xFFF00F0F); 
+}
+
+//
+// Prototype Implementations
+//
+bool d3d::CDumpMeshInfo::Open( LPCTSTR lpFileName )
+{
+    if (m_OutFile.is_open())
+    {
+        m_OutFile.close();
+    }
+    m_OutFile.open(lpFileName);
+    return m_OutFile.is_open();
+}
+
+bool d3d::CDumpMeshInfo::dumpVertices( ID3DXMesh* mesh )
+{
+    if(!CheckStreamValid())
+        return false;
+    if(mesh == 0)
+        return false;
+
+    m_OutFile << _T("Vertices:") << std::endl;
+    m_OutFile << _T("---------") << std::endl << std::endl;
+
+    Vertex* v = 0;
+    mesh->LockVertexBuffer(0, (void**)&v);
+    for(int i = 0; i < mesh->GetNumVertices(); i++)
+    {
+        m_OutFile << _T("Vertex ") << i << _T(": (");
+        m_OutFile << v[i]._x  << _T(", ") << v[i]._y  << _T(", ") << v[i]._z  << _T(", ");
+        m_OutFile << v[i]._nx << _T(", ") << v[i]._ny << _T(", ") << v[i]._nz << _T(", ");
+        m_OutFile << v[i]._u  << _T(", ") << v[i]._v  << _T(")")  << std::endl;
+    }
+    mesh->UnlockVertexBuffer();
+    m_OutFile << std::endl << std::endl;
+    return true;
+}
+
+bool d3d::CDumpMeshInfo::dumpIndices( ID3DXMesh* mesh )
+{
+    if(!CheckStreamValid())
+        return false;
+    if(mesh == 0)
+        return false;
+
+    m_OutFile << _T("Indices:") << std::endl;
+    m_OutFile << _T("--------") << std::endl << std::endl;
+
+    WORD* indices = 0;
+    mesh->LockIndexBuffer(0, (void**)&indices);
+
+    for(int i = 0; i < mesh->GetNumFaces(); i++)
+    {
+        m_OutFile << _T("Triangle ") << i << _T(": ");
+        m_OutFile << indices[i * 3    ] << _T(" ");
+        m_OutFile << indices[i * 3 + 1] << _T(" ");
+        m_OutFile << indices[i * 3 + 2] << std::endl;
+    }
+    mesh->UnlockIndexBuffer();
+
+    m_OutFile << std::endl << std::endl;
+    return true;
+}
+
+bool d3d::CDumpMeshInfo::dumpAttributeBuffer( ID3DXMesh* mesh )
+{
+    if(!CheckStreamValid())
+        return false;
+    if(mesh == 0)
+        return false;
+
+    m_OutFile << "Attribute Buffer:" << std::endl;
+    m_OutFile << "-----------------" << std::endl << std::endl;
+
+    DWORD* attributeBuffer = 0;
+    mesh->LockAttributeBuffer(0, &attributeBuffer);
+
+    // an attribute for each face
+    for(int i = 0; i < mesh->GetNumFaces(); i++)
+    {
+        m_OutFile << "Triangle lives in subset " << i << ": ";
+        m_OutFile << attributeBuffer[i] << std::endl;
+    }
+    mesh->UnlockAttributeBuffer();
+
+    m_OutFile << std::endl << std::endl;
+    return true;
+}
+
+bool d3d::CDumpMeshInfo::dumpAdjacencyBuffer( ID3DXMesh* mesh )
+{
+    if(!CheckStreamValid())
+        return false;
+    if(mesh == 0)
+        return false;
+
+    m_OutFile << "Adjacency Buffer:" << std::endl;
+    m_OutFile << "-----------------" << std::endl << std::endl;
+
+    // three enttries per face
+    std::vector<DWORD> adjacencyBuffer(mesh->GetNumFaces() * 3);
+
+    mesh->GenerateAdjacency(0.0f, &adjacencyBuffer[0]);
+
+    for(int i = 0; i < mesh->GetNumFaces(); i++)
+    {
+        m_OutFile << "Triangle's adjacent to triangle " << i << ": ";
+        m_OutFile << adjacencyBuffer[i * 3    ] << " ";
+        m_OutFile << adjacencyBuffer[i * 3 + 1] << " ";
+        m_OutFile << adjacencyBuffer[i * 3 + 2] << std::endl;
+    }
+
+    m_OutFile << std::endl << std::endl;
+    return true;
+}
+
+bool d3d::CDumpMeshInfo::dumpAttributeTable( ID3DXMesh* mesh )
+{
+    if(!CheckStreamValid())
+        return false;
+    if(mesh == 0)
+        return false;
+
+    m_OutFile << "Attribute Table:" << std::endl;
+    m_OutFile << "----------------" << std::endl << std::endl;	
+
+    // number of entries in the attribute table
+    DWORD numEntries = 0;
+
+    // 第一步获取属性表的属性个数
+    mesh->GetAttributeTable(0, &numEntries);    // 获取图元ID的集合表,可以通过这个表查到有哪些属性ID,这些属性ID对应的面放在哪里,有多少个这种面
+
+    std::vector<D3DXATTRIBUTERANGE> table(numEntries);
+
+    // 根据上一步获取的个数,申请内存,再次获取具体信息,就和IN API的调用方式非常相似
+    mesh->GetAttributeTable(&table[0], &numEntries);
+
+    for(int i = 0; i < numEntries; i++)
+    {
+        m_OutFile << "Entry " << i << std::endl;
+        m_OutFile << "-----------" << std::endl;
+
+        m_OutFile << "Subset ID:    " << table[i].AttribId    << std::endl;
+        m_OutFile << "Face Start:   " << table[i].FaceStart   << std::endl;
+        m_OutFile << "Face Count:   " << table[i].FaceCount   << std::endl;
+        m_OutFile << "Vertex Start: " << table[i].VertexStart << std::endl;
+        m_OutFile << "Vertex Count: " << table[i].VertexCount << std::endl;
+        m_OutFile << std::endl;
+    }
+
+    m_OutFile << std::endl << std::endl;
+    return true;
 }

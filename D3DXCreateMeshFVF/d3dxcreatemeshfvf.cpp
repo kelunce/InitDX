@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "d3dUtility.h"
-#include <fstream>
+
 #include <vector>
 
 //
@@ -28,38 +28,6 @@ const int Height = 480;
 ID3DXMesh*         Mesh = 0;
 const DWORD        NumSubsets = 3;
 IDirect3DTexture9* Textures[3] = {0, 0, 0};// texture for each subset
-
-std::ofstream OutFile; // used to dump mesh data to file
-
-//
-// Prototypes
-//
-
-void dumpVertices(std::ofstream& outFile, ID3DXMesh* mesh);
-void dumpIndices(std::ofstream& outFile, ID3DXMesh* mesh);
-void dumpAttributeBuffer(std::ofstream& outFile, ID3DXMesh* mesh);
-void dumpAdjacencyBuffer(std::ofstream& outFile, ID3DXMesh* mesh);
-void dumpAttributeTable(std::ofstream& outFile, ID3DXMesh* mesh);
-
-//
-// Classes and Structures
-//
-struct Vertex
-{
-	Vertex(){}
-	Vertex(float x, float y, float z, 
-		float nx, float ny, float nz, float u, float v)
-	{
-		 _x = x;   _y = y;   _z = z;
-		_nx = nx; _ny = ny; _nz = nz;
-		 _u = u;   _v = v;
-	}
-
-	float _x, _y, _z, _nx, _ny, _nz, _u, _v;
-
-	static const DWORD FVF;
-};
-const DWORD Vertex::FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1;
 
 //
 // Framework functions
@@ -77,7 +45,7 @@ bool Setup()
 		12,                     // mesh将拥有的面数,一个立方体=12个三角形面片
 		24,                     //  mesh将拥有的顶点数,6个面,每个面又两三角形4个顶点组成
 		D3DXMESH_MANAGED,       // 内存管理标志,DX托管
-		Vertex::FVF,            // 顶点格式
+        d3d::CDumpMeshInfo::Vertex::FVF,            // 顶点格式
 		Device,                 // 与mesh相关的设备。
 		&Mesh);                 // 输出创建好的mesh
 
@@ -90,44 +58,44 @@ bool Setup()
 	// 用一个立方体几何信息来填充mesh
 	// Fill in vertices of a box
 	// 
-	Vertex* v = 0;
+	d3d::CDumpMeshInfo::Vertex* v = 0;
 	Mesh->LockVertexBuffer(0, (void**)&v);  // 锁定顶点缓冲区
 
 	// fill in the front face vertex data
-	v[0] = Vertex(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[1] = Vertex(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[2] = Vertex( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
-	v[3] = Vertex( 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
+	v[0] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	v[1] = d3d::CDumpMeshInfo::Vertex(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
+	v[2] = d3d::CDumpMeshInfo::Vertex( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
+	v[3] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
 
 	// fill in the back face vertex data
-	v[4] = Vertex(-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-	v[5] = Vertex( 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
-	v[6] = Vertex( 1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-	v[7] = Vertex(-1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+	v[4] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	v[5] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+	v[6] = d3d::CDumpMeshInfo::Vertex( 1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+	v[7] = d3d::CDumpMeshInfo::Vertex(-1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
 
 	// fill in the top face vertex data
-	v[8]  = Vertex(-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
-	v[9]  = Vertex(-1.0f, 1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
-	v[10] = Vertex( 1.0f, 1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
-	v[11] = Vertex( 1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
+	v[8]  = d3d::CDumpMeshInfo::Vertex(-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+	v[9]  = d3d::CDumpMeshInfo::Vertex(-1.0f, 1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+	v[10] = d3d::CDumpMeshInfo::Vertex( 1.0f, 1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
+	v[11] = d3d::CDumpMeshInfo::Vertex( 1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
 
 	// fill in the bottom face vertex data
-	v[12] = Vertex(-1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f);
-	v[13] = Vertex( 1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
-	v[14] = Vertex( 1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f);
-	v[15] = Vertex(-1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+	v[12] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f);
+	v[13] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
+	v[14] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f);
+	v[15] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
 
 	// fill in the left face vertex data
-	v[16] = Vertex(-1.0f, -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	v[17] = Vertex(-1.0f,  1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	v[18] = Vertex(-1.0f,  1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-	v[19] = Vertex(-1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	v[16] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	v[17] = d3d::CDumpMeshInfo::Vertex(-1.0f,  1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[18] = d3d::CDumpMeshInfo::Vertex(-1.0f,  1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	v[19] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	// fill in the right face vertex data
-	v[20] = Vertex( 1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	v[21] = Vertex( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	v[22] = Vertex( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-	v[23] = Vertex( 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	v[20] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	v[21] = d3d::CDumpMeshInfo::Vertex( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[22] = d3d::CDumpMeshInfo::Vertex( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	v[23] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	Mesh->UnlockVertexBuffer();     // 解锁顶点缓冲区
 
@@ -170,9 +138,9 @@ bool Setup()
 	// the the last two faces will be in subset 2.
 	// 根据mesh 的每个面指定子集, 面片个数==属性缓冲区元素个数
 	DWORD* attributeBuffer = 0;
-	Mesh->LockAttributeBuffer(0, &attributeBuffer); // 锁定属性缓冲区
+	Mesh->LockAttributeBuffer(0, &attributeBuffer); // 锁定属性缓冲区,数组长度等于面个数,就是每个面的网格ID,两个面的网格ID可以相同
 
-    // 给12面都指定网格子集ID,即填充属性缓冲区
+    // 给12面都指定网格子集ID,即填充属性缓冲区,共3个网格ID.0,1,2;每四个面一个ID
 	for(int a = 0; a < 4; a++)
 		attributeBuffer[a] = 0;
 
@@ -189,9 +157,12 @@ bool Setup()
 	// 邻接数组是DWORD数组
     
 	std::vector<DWORD> adjacencyBuffer(Mesh->GetNumFaces() * 3);    // 邻接信息数组大小是面片的3倍
-	Mesh->GenerateAdjacency(0.0f, &adjacencyBuffer[0]);             // 计算邻接信息数组
+	Mesh->GenerateAdjacency(            // 计算邻接信息数组,即每条边和哪一个面相接的信息
+        0.0f,                           // [in]指定两个浮点数相等的差距,用于判断两个点是否同一个点
+        &adjacencyBuffer[0]             // [out]DWORD数组
+    );             
 
-	hr = Mesh->OptimizeInplace(		    // 优化网格 
+	hr = Mesh->OptimizeInplace(		    // 优化网格,重新组织网格的顶点和索引,以达到更加有效的渲染的目的,会更新原来的网格对象,Optimize方法则不会
 		D3DXMESHOPT_ATTRSORT |          // 优化类型参数,根据属性给三角形排序并调整属性表
 		D3DXMESHOPT_COMPACT  |          // 优化类型参数,从mesh中移除没有用的顶点和索引项
 		D3DXMESHOPT_VERTEXCACHE,        // 优化类型参数,增加顶点缓存的命中率。
@@ -204,15 +175,14 @@ bool Setup()
 	// Dump the Mesh Data to file.
 	//
 
-	OutFile.open(_T("Mesh Dump.txt"));
+    d3d::CDumpMeshInfo dump;
+    dump.Open(_T("Mesh Dump.txt"));
 
-	dumpVertices(OutFile, Mesh);
-	dumpIndices(OutFile, Mesh);
-	dumpAttributeTable(OutFile, Mesh); 	
-	dumpAttributeBuffer(OutFile, Mesh);		
-	dumpAdjacencyBuffer(OutFile, Mesh);
-	
-	OutFile.close();
+	dump.dumpVertices( Mesh);
+	dump.dumpIndices( Mesh);
+	dump.dumpAttributeTable( Mesh); 	
+	dump.dumpAttributeBuffer( Mesh);
+	dump.dumpAdjacencyBuffer( Mesh);
 
 	//
 	// Load the textures and set filters.
@@ -373,117 +343,4 @@ int WINAPI WinMain(HINSTANCE hinstance,
 	Device->Release();
 
 	return 0;
-}
-
-//
-// Prototype Implementations
-//
-
-void dumpVertices(std::ofstream& outFile, ID3DXMesh* mesh)
-{
-	outFile << _T("Vertices:") << std::endl;
-	outFile << _T("---------") << std::endl << std::endl;
-
-	Vertex* v = 0;
-	mesh->LockVertexBuffer(0, (void**)&v);
-	for(int i = 0; i < mesh->GetNumVertices(); i++)
-	{
-		outFile << _T("Vertex ") << i << _T(": (");
-		outFile << v[i]._x  << _T(", ") << v[i]._y  << _T(", ") << v[i]._z  << _T(", ");
-		outFile << v[i]._nx << _T(", ") << v[i]._ny << _T(", ") << v[i]._nz << _T(", ");
-		outFile << v[i]._u  << _T(", ") << v[i]._v  << _T(")")  << std::endl;
-	}
-	mesh->UnlockVertexBuffer();
-
-	outFile << std::endl << std::endl;
-}
-
-void dumpIndices(std::ofstream& outFile, ID3DXMesh* mesh)
-{
-	outFile << _T("Indices:") << std::endl;
-	outFile << _T("--------") << std::endl << std::endl;
-
-	WORD* indices = 0;
-	mesh->LockIndexBuffer(0, (void**)&indices);
-
-	for(int i = 0; i < mesh->GetNumFaces(); i++)
-	{
-		outFile << _T("Triangle ") << i << _T(": ");
-		outFile << indices[i * 3    ] << _T(" ");
-		outFile << indices[i * 3 + 1] << _T(" ");
-		outFile << indices[i * 3 + 2] << std::endl;
-	}
-	mesh->UnlockIndexBuffer();
-
-	outFile << std::endl << std::endl;
-}
-
-void dumpAttributeBuffer(std::ofstream& outFile, ID3DXMesh* mesh)
-{
-	outFile << "Attribute Buffer:" << std::endl;
-	outFile << "-----------------" << std::endl << std::endl;
-
-	DWORD* attributeBuffer = 0;
-	mesh->LockAttributeBuffer(0, &attributeBuffer);
-
-	// an attribute for each face
-	for(int i = 0; i < mesh->GetNumFaces(); i++)
-	{
-		outFile << "Triangle lives in subset " << i << ": ";
-		outFile << attributeBuffer[i] << std::endl;
-	}
-	mesh->UnlockAttributeBuffer();
-
-	outFile << std::endl << std::endl;
-}
-
-void dumpAdjacencyBuffer(std::ofstream& outFile, ID3DXMesh* mesh)
-{
-	outFile << "Adjacency Buffer:" << std::endl;
-	outFile << "-----------------" << std::endl << std::endl;
-
-	// three enttries per face
-	std::vector<DWORD> adjacencyBuffer(mesh->GetNumFaces() * 3);
-
-	mesh->GenerateAdjacency(0.0f, &adjacencyBuffer[0]);
-
-	for(int i = 0; i < mesh->GetNumFaces(); i++)
-	{
-		outFile << "Triangle's adjacent to triangle " << i << ": ";
-		outFile << adjacencyBuffer[i * 3    ] << " ";
-		outFile << adjacencyBuffer[i * 3 + 1] << " ";
-		outFile << adjacencyBuffer[i * 3 + 2] << std::endl;
-	}
-
-	outFile << std::endl << std::endl;
-}
-
-void dumpAttributeTable(std::ofstream& outFile, ID3DXMesh* mesh)
-{
-	outFile << "Attribute Table:" << std::endl;
-	outFile << "----------------" << std::endl << std::endl;	
-
-	// number of entries in the attribute table
-	DWORD numEntries = 0;
-
-	mesh->GetAttributeTable(0, &numEntries);
-
-	std::vector<D3DXATTRIBUTERANGE> table(numEntries);
-
-	mesh->GetAttributeTable(&table[0], &numEntries);
-
-	for(int i = 0; i < numEntries; i++)
-	{
-		outFile << "Entry " << i << std::endl;
-		outFile << "-----------" << std::endl;
-
-		outFile << "Subset ID:    " << table[i].AttribId    << std::endl;
-		outFile << "Face Start:   " << table[i].FaceStart   << std::endl;
-		outFile << "Face Count:   " << table[i].FaceCount   << std::endl;
-		outFile << "Vertex Start: " << table[i].VertexStart << std::endl;
-		outFile << "Vertex Count: " << table[i].VertexCount << std::endl;
-		outFile << std::endl;
-	}
-
-	outFile << std::endl << std::endl;
 }

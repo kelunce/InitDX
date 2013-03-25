@@ -9,8 +9,9 @@
 // Desc: Demonstrates how to load and render an XFile.
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
-#include "d3dUtility.h"
 #include <vector>
+#include "d3dUtility.h"
+
 
 //
 // Globals
@@ -29,26 +30,26 @@ std::vector<IDirect3DTexture9*> Textures(0);
 // Framework functions
 //
 bool Setup()
-{
+{ 
 	HRESULT hr = 0;
 
 	//
 	// Load the XFile data.
 	//
 
-	ID3DXBuffer* adjBuffer  = 0;
+    ID3DXBuffer* adjBuffer  = 0;    // 封装一个buffer,提供GetBufferSize和GetBufferPointer,void*指针
 	ID3DXBuffer* mtrlBuffer = 0;
 	DWORD        numMtrls   = 0;
 
-	hr = D3DXLoadMeshFromX(  
-		_T("bigship1.x"),
-		D3DXMESH_MANAGED,
-		Device,
-		&adjBuffer,
-		&mtrlBuffer,
-		0,
-		&numMtrls,
-		&Mesh);
+	hr = D3DXLoadMeshFromX(     //从X文件中读取几何信息数据,动画信息是读不到的
+		_T("bigship1.x"),       // 这是一个bin格式的X文件
+		D3DXMESH_MANAGED,       //mesh数据将被放在受控的内存中
+		Device,                 //与复制mesh有关的设备。
+		&adjBuffer,             //返回一个ID3DXBuffer包含一个DWORD数组，描述mesh的邻接信息
+		&mtrlBuffer,            //返回一个ID3DXBuffer包含一个D3DXMATERIAL结构的数组，存储了mesh的材质数据
+        0,                      //返回一个ID3DXBuffer包含一个D3DXEFFECTINSTANCE结构的数组。我们现在通过指定0值来忽略这个参数
+		&numMtrls,              //返回mesh的材质数。对应于网格子集ID集合
+		&Mesh);                 //返回填充了X文件几何信息的ID3DXMesh对象。
 
 	if(FAILED(hr))
 	{
@@ -56,33 +57,55 @@ bool Setup()
 		return false;
 	}
 
+    // Get Mesh Info
+    TCHAR szMeshInfo[2048];
+    swprintf(szMeshInfo,sizeof(szMeshInfo),_T("顶点格式:0x%04x,\n面数:%u,\n顶点大小:%u,\n顶点数量:%u \n"),
+    Mesh->GetFVF(),
+    Mesh->GetNumFaces(),
+    Mesh->GetNumBytesPerVertex(),
+    Mesh->GetNumVertices()
+    );
+    OutputDebugStr(szMeshInfo);
+    /*
+    DWORD* attributeBuffer = 0;
+    Mesh->LockAttributeBuffer(0, &attributeBuffer);
+    Mesh->UnlockAttributeBuffer();  // 解锁属性缓冲区
+    */
 	//
 	// Extract the materials, and load textures.
 	//
 
 	if( mtrlBuffer != 0 && numMtrls != 0 )
 	{
-		D3DXMATERIAL* mtrls = (D3DXMATERIAL*)mtrlBuffer->GetBufferPointer();
+		D3DXMATERIAL* mtrls = (D3DXMATERIAL*)mtrlBuffer->GetBufferPointer();// D3DXMATERIAL的纹理名是ANSI编码,这个结构体不存在UNICODE版本!!
 
 		for(int i = 0; i < numMtrls; i++)
 		{
 			// the MatD3D property doesn't have an ambient value set
 			// when its loaded, so set it now:
-			mtrls[i].MatD3D.Ambient = mtrls[i].MatD3D.Diffuse;
+			mtrls[i].MatD3D.Ambient = mtrls[i].MatD3D.Diffuse; // 设置环境光
 
 			// save the ith material
 			Mtrls.push_back( mtrls[i].MatD3D );
 
 			// check if the ith material has an associative texture
-			if( mtrls[i].pTextureFilename != 0 )
-			{
-				// yes, load the texture for the ith subset
-                TCHAR szTextureName[MAX_PATH];
-                swprintf(szTextureName,_T("%s"),mtrls[i].pTextureFilename);
+			if( mtrls[i].pTextureFilename != 0 )// bigship1.x没有关联纹理
+			{               
+                TCHAR filename[MAX_PATH];
+#ifdef UNICODE
+                 // Need to convert the texture filenames to Unicode string
+                MultiByteToWideChar( CP_ACP, 0, mtrls[i].pTextureFilename, -1, filename, MAX_PATH );
+                filename[MAX_PATH - 1] = _T('\0');
+#else 
+                ZeroMemory(filename,sizeof(filename));
+                strcat_s(filename,sizeof(filename),mtrls[i].pTextureFilename);
+#endif
+
+                // yes, load the texture for the ith subset
 				IDirect3DTexture9* tex = 0;
 				D3DXCreateTextureFromFile(
 					Device,
-                    szTextureName,  // 这里就是不能直接使用mtrls[i].pTextureFilename,会报UNICODE编码错误
+                    filename,
 					&tex);
 
 				// save the loaded texture
@@ -101,6 +124,9 @@ bool Setup()
 	// Optimize the mesh.
 	//
 
+    // 这个X文件有顶点法线,这里只是重新计算作为演示.如果网格没有法线格式则需要用cloneMeshFVF方法复制新的网格格式再计算
+    D3DXComputeNormals(Mesh,(DWORD*)adjBuffer->GetBufferPointer());// 生成顶点法线
+
 	hr = Mesh->OptimizeInplace(		
 		D3DXMESHOPT_ATTRSORT |
 		D3DXMESHOPT_COMPACT  |
@@ -109,6 +135,8 @@ bool Setup()
 		0, 0, 0);
 
 	d3d::Release<ID3DXBuffer*>(adjBuffer); // done w/ buffer
+
+    
 
 	if(FAILED(hr))
 	{
@@ -183,7 +211,7 @@ bool Display(float timeDelta)
 	if( Device )
 	{
 		//
-		// Update: Rotate the mesh.
+		// Update: Rotate the mesh.这里是旋转模型,而不是旋转摄像机
 		//
 
 		static float y = 0.0f;
