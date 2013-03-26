@@ -42,14 +42,14 @@ bool Setup()
 	// Create the objects.
 	//
 
-    // 茶壶
-	D3DXCreateTeapot(
+    
+	D3DXCreateTeapot(// 茶壶
 		Device,
 		&Objects[0],
 		0);
 
-    // 立方体
-	D3DXCreateBox(
+    
+	D3DXCreateBox(// 立方体
 		Device,
 		2.0f, // width
 		2.0f, // height
@@ -57,9 +57,9 @@ bool Setup()
 		&Objects[1],
 		0);
 
-    // 圆柱体
+    
 	// cylinder is built aligned on z-axis
-	D3DXCreateCylinder(
+	D3DXCreateCylinder(// 圆柱体
 		Device,
 		1.0f, // radius at negative z end
 		1.0f, // radius at positive z end
@@ -69,8 +69,8 @@ bool Setup()
 		&Objects[2],
 		0);
 
-    // 圆环
-	D3DXCreateTorus(
+    
+	D3DXCreateTorus(// 圆环
 		Device,
 		1.0f, // inner radius
 		3.0f, // outer radius
@@ -79,8 +79,8 @@ bool Setup()
 		&Objects[3],
 		0);
 
-    // 球体
-	D3DXCreateSphere(
+    
+	D3DXCreateSphere(// 球体
 		Device,
 		1.0f, // radius
 		10,   // slices

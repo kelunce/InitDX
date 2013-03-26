@@ -136,7 +136,7 @@ bool Setup()
    
 	D3DXMatrixLookAtLH(&V, &position, &target, &up); // 获取视图矩阵(该矩阵和摄像机位置和方向相关,其实就是指定摄像机的位置),默认眼睛在世界坐标原点,眼睛往屏幕里面看(Z轴正方向)
     
-    Device->SetTransform(D3DTS_VIEW, &V);// 设置视图矩阵
+    Device->SetTransform(D3DTS_VIEW, &V);// 设置视图矩阵,即摄像机
     
     /*
     这里省略如下步骤:

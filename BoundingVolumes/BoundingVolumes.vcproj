@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="12XFile"
-	ProjectGUID="{3B37F09C-0C6E-4884-A790-3DD871787500}"
-	RootNamespace="XFile"
+	Name="12BoundingVolumes"
+	ProjectGUID="{EFB86A64-9458-4057-9080-A4332732F199}"
+	RootNamespace="BoundingVolumes"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -114,7 +114,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
@@ -173,7 +173,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\xfile.cpp"
+				RelativePath=".\boundingvolumes.cpp"
 				>
 			</File>
 		</Filter>

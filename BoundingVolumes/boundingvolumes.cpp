@@ -1,17 +1,19 @@
 ﻿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
-// File: xfile.cpp
+// File: boundingvolumes.cpp
 // 
 // Author: Frank Luna (C) All Rights Reserved
 //
 // System: AMD Athlon 1800+ XP, 512 DDR, Geforce 3, Windows XP, MSVC++ 7.0 
 //
-// Desc: Demonstrates how to load and render an XFile.
+// Desc: Demonstrates how to use D3DXComputeBoundingSphere and D3DXComputeBoundingBox.
+//
+//      -The spacebar key switches between rendering the mesh's bounding sphere and box.
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
-#include <vector>
-#include "d3dUtility.h"
 
+#include "d3dUtility.h"
+#include <vector>
 
 //
 // Globals
@@ -26,30 +28,41 @@ ID3DXMesh*                      Mesh = 0;
 std::vector<D3DMATERIAL9>       Mtrls(0);
 std::vector<IDirect3DTexture9*> Textures(0);
 
+ID3DXMesh* SphereMesh = 0;
+ID3DXMesh* BoxMesh    = 0;
+
+bool RenderBoundingSphere = true;
+
+//
+// Prototypes
+//
+
+bool ComputeBoundingSphere(ID3DXMesh* mesh, d3d::BoundingSphere* sphere);
+bool    ComputeBoundingBox(ID3DXMesh* mesh, d3d::BoundingBox*    box);
+
 //
 // Framework functions
 //
 bool Setup()
-{ 
+{
 	HRESULT hr = 0;
 
 	//
 	// Load the XFile data.
 	//
-
-    ID3DXBuffer* adjBuffer  = 0;    // 封装一个buffer,提供GetBufferSize和GetBufferPointer,void*指针
+	ID3DXBuffer* adjBuffer  = 0;
 	ID3DXBuffer* mtrlBuffer = 0;
 	DWORD        numMtrls   = 0;
 
-	hr = D3DXLoadMeshFromX(     //从X文件中读取几何信息数据,动画信息是读不到的
-		_T("bigship1.x"),       // 这是一个bin格式的X文件
-		D3DXMESH_MANAGED,       //mesh数据将被放在受控的内存中
-		Device,                 //与复制mesh有关的设备。
-		&adjBuffer,             //返回一个ID3DXBuffer包含一个DWORD数组，描述mesh的邻接信息
-		&mtrlBuffer,            //返回一个ID3DXBuffer包含一个D3DXMATERIAL结构的数组，存储了mesh的材质数据
-        0,                      //返回一个ID3DXBuffer包含一个D3DXEFFECTINSTANCE结构的数组。我们现在通过指定0值来忽略这个参数
-		&numMtrls,              //返回mesh的材质数。对应于网格子集ID数量
-		&Mesh);                 //返回填充了X文件几何信息的ID3DXMesh对象。
+	hr = D3DXLoadMeshFromX(  
+		_T("bigship1.x"),
+		D3DXMESH_MANAGED,
+		Device,
+		&adjBuffer,
+		&mtrlBuffer,
+		0,
+		&numMtrls,
+		&Mesh);
 
 	if(FAILED(hr))
 	{
@@ -57,43 +70,29 @@ bool Setup()
 		return false;
 	}
 
-    // Get Mesh Info
-    TCHAR szMeshInfo[2048];
-    swprintf(szMeshInfo,sizeof(szMeshInfo),_T("顶点格式:0x%04x,\n面数:%u,\n顶点大小:%u,\n顶点数量:%u \n"),
-    Mesh->GetFVF(),
-    Mesh->GetNumFaces(),
-    Mesh->GetNumBytesPerVertex(),
-    Mesh->GetNumVertices()
-    );
-    OutputDebugStr(szMeshInfo);
-    /*
-    DWORD* attributeBuffer = 0;
-    Mesh->LockAttributeBuffer(0, &attributeBuffer);
-    Mesh->UnlockAttributeBuffer();  // 解锁属性缓冲区
-    */
 	//
-	// Extract the materials, and load textures.
+	// Extract the materials, load textures.
 	//
 
 	if( mtrlBuffer != 0 && numMtrls != 0 )
 	{
-		D3DXMATERIAL* mtrls = (D3DXMATERIAL*)mtrlBuffer->GetBufferPointer();// D3DXMATERIAL的纹理名是ANSI编码,这个结构体不存在UNICODE版本!!
+		D3DXMATERIAL* mtrls = (D3DXMATERIAL*)mtrlBuffer->GetBufferPointer();
 
 		for(int i = 0; i < numMtrls; i++)
 		{
 			// the MatD3D property doesn't have an ambient value set
 			// when its loaded, so set it now:
-			mtrls[i].MatD3D.Ambient = mtrls[i].MatD3D.Diffuse; // 设置环境光
+			mtrls[i].MatD3D.Ambient = mtrls[i].MatD3D.Diffuse;
 
 			// save the ith material
 			Mtrls.push_back( mtrls[i].MatD3D );
 
 			// check if the ith material has an associative texture
-			if( mtrls[i].pTextureFilename != 0 )// bigship1.x没有关联纹理
-			{               
+			if( mtrls[i].pTextureFilename != 0 )
+			{
                 TCHAR filename[MAX_PATH];
 #ifdef UNICODE
-                 // Need to convert the texture filenames to Unicode string
+                // Need to convert the texture filenames to Unicode string
                 MultiByteToWideChar( CP_ACP, 0, mtrls[i].pTextureFilename, -1, filename, MAX_PATH );
                 filename[MAX_PATH - 1] = _T('\0');
 #else 
@@ -101,11 +100,11 @@ bool Setup()
                 strcat_s(filename,sizeof(filename),mtrls[i].pTextureFilename);
 #endif
 
-                // yes, load the texture for the ith subset
+				// yes, load the texture for the ith subset
 				IDirect3DTexture9* tex = 0;
 				D3DXCreateTextureFromFile(
 					Device,
-                    filename,
+					filename,
 					&tex);
 
 				// save the loaded texture
@@ -124,9 +123,6 @@ bool Setup()
 	// Optimize the mesh.
 	//
 
-    // 这个X文件有顶点法线,这里只是重新计算作为演示.如果网格没有法线格式则需要用cloneMeshFVF方法复制新的网格格式再计算
-    D3DXComputeNormals(Mesh,(DWORD*)adjBuffer->GetBufferPointer());// 生成顶点法线
-
 	hr = Mesh->OptimizeInplace(		
 		D3DXMESHOPT_ATTRSORT |
 		D3DXMESHOPT_COMPACT  |
@@ -136,13 +132,37 @@ bool Setup()
 
 	d3d::Release<ID3DXBuffer*>(adjBuffer); // done w/ buffer
 
-    
-
 	if(FAILED(hr))
 	{
 		::MessageBox(0, _T("OptimizeInplace() - FAILED"), 0, 0);
 		return false;
 	}
+
+	//
+	// Compute Bounding Sphere and Bounding Box.
+	//
+    
+	d3d::BoundingSphere boundingSphere;
+	d3d::BoundingBox    boundingBox;
+
+	ComputeBoundingSphere( Mesh, &boundingSphere);  // 计算网格球形包围体
+	ComputeBoundingBox( Mesh, &boundingBox);        // 计算网格立方体包围体
+
+	D3DXCreateSphere(
+		Device,
+		boundingSphere._radius,
+		20,
+		20,
+		&SphereMesh,
+		0);
+
+	D3DXCreateBox(
+		Device,
+		boundingBox._max.x - boundingBox._min.x,
+		boundingBox._max.y - boundingBox._min.y,
+		boundingBox._max.z - boundingBox._min.z,
+		&BoxMesh,
+		0);
 
 	//
 	// Set texture filters.
@@ -169,7 +189,7 @@ bool Setup()
 	// Set camera.
 	//
 
-	D3DXVECTOR3 pos(4.0f, 4.0f, -13.0f);
+	D3DXVECTOR3 pos(4.0f, 12.0f, -20.0f);
 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 
@@ -204,6 +224,9 @@ void Cleanup()
 
 	for(int i = 0; i < Textures.size(); i++)
 		d3d::Release<IDirect3DTexture9*>( Textures[i] );
+
+	d3d::Release<ID3DXMesh*>(SphereMesh);
+	d3d::Release<ID3DXMesh*>(BoxMesh);
 }
 
 bool Display(float timeDelta)
@@ -211,7 +234,7 @@ bool Display(float timeDelta)
 	if( Device )
 	{
 		//
-		// Update: Rotate the mesh.这里是旋转模型,而不是旋转摄像机
+		// Update: Rotate the mesh.
 		//
 
 		static float y = 0.0f;
@@ -233,12 +256,33 @@ bool Display(float timeDelta)
 		Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
 		Device->BeginScene();
 
+		// draw the mesh
 		for(int i = 0; i < Mtrls.size(); i++)
 		{
 			Device->SetMaterial( &Mtrls[i] );
 			Device->SetTexture(0, Textures[i]);
-			Mesh->DrawSubset(i); // D3DXLoadMeshFromX获得的材质数量就是网格子集的数量,并且从0开始递增
+			Mesh->DrawSubset(i);
 		}	
+
+		//
+		// Draw bounding volume in blue and at 10% opacity
+		D3DMATERIAL9 blue = d3d::BLUE_MTRL;
+		blue.Diffuse.a = 0.10f; // 10% opacity
+
+		Device->SetMaterial(&blue);
+		Device->SetTexture(0, 0); // disable texture
+
+		Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+		Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+        // 使用透明体的办法显示包围体
+		if( RenderBoundingSphere )
+			SphereMesh->DrawSubset(0);
+		else
+			BoxMesh->DrawSubset(0);
+
+		Device->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 
 		Device->EndScene();
 		Device->Present(0, 0, 0, 0);
@@ -260,6 +304,10 @@ LRESULT CALLBACK d3d::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		if( wParam == VK_ESCAPE )
 			::DestroyWindow(hwnd);
+
+		if( wParam == VK_SPACE )
+			RenderBoundingSphere = !RenderBoundingSphere;
+
 		break;
 	}
 	return ::DefWindowProc(hwnd, msg, wParam, lParam);
@@ -296,3 +344,49 @@ int WINAPI WinMain(HINSTANCE hinstance,
 }
 
 
+bool ComputeBoundingSphere(ID3DXMesh* mesh, d3d::BoundingSphere* sphere)
+{
+	HRESULT hr = 0;
+
+	BYTE* v = 0;
+	mesh->LockVertexBuffer(0, (void**)&v);
+
+	hr = D3DXComputeBoundingSphere(                 // 计算网格球体包围边界
+			(D3DXVECTOR3*)v,                        // [in]指向在顶点数组中第一个顶点的向量，描述顶点位置
+			mesh->GetNumVertices(),                 // [in]在顶点数组中的的顶点数
+			D3DXGetFVFVertexSize(mesh->GetFVF()),   // [in]每个顶点的字节大小
+			&sphere->_center,                       // [out]返回边界球的中心
+			&sphere->_radius                        // [out]返回边界球的半径
+            );
+
+	mesh->UnlockVertexBuffer();
+
+	if( FAILED(hr) )
+		return false;
+
+	return true;
+}
+
+
+bool ComputeBoundingBox(ID3DXMesh* mesh, d3d::BoundingBox* box)
+{
+	HRESULT hr = 0;
+
+	BYTE* v = 0;
+	mesh->LockVertexBuffer(0, (void**)&v);
+
+	hr = D3DXComputeBoundingBox(                    // 计算网格立方体包围边界
+			(D3DXVECTOR3*)v,                        // [in]指向在顶点数组中第一个顶点的向量，描述顶点位置
+			mesh->GetNumVertices(),                 // [in]在顶点数组中的的顶点数
+			D3DXGetFVFVertexSize(mesh->GetFVF()),   // [in]每个顶点的字节大小
+			&box->_min, // [out]返回边界盒的最小点
+			&box->_max  // [out]返回边界盒的最大点
+            );
+
+	mesh->UnlockVertexBuffer();
+
+	if( FAILED(hr) )
+		return false;
+
+	return true;
+}

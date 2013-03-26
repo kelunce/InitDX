@@ -45,7 +45,7 @@ bool Setup()
 		12,                     // mesh将拥有的面数,一个立方体=12个三角形面片
 		24,                     //  mesh将拥有的顶点数,6个面,每个面又两三角形4个顶点组成
 		D3DXMESH_MANAGED,       // 内存管理标志,DX托管
-        d3d::CDumpMeshInfo::Vertex::FVF,            // 顶点格式
+        d3d::Vertex::FVF,            // 顶点格式
 		Device,                 // 与mesh相关的设备。
 		&Mesh);                 // 输出创建好的mesh
 
@@ -58,44 +58,44 @@ bool Setup()
 	// 用一个立方体几何信息来填充mesh
 	// Fill in vertices of a box
 	// 
-	d3d::CDumpMeshInfo::Vertex* v = 0;
+	d3d::Vertex* v = 0;
 	Mesh->LockVertexBuffer(0, (void**)&v);  // 锁定顶点缓冲区
 
 	// fill in the front face vertex data
-	v[0] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[1] = d3d::CDumpMeshInfo::Vertex(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[2] = d3d::CDumpMeshInfo::Vertex( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
-	v[3] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
+	v[0] = d3d::Vertex(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	v[1] = d3d::Vertex(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
+	v[2] = d3d::Vertex( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
+	v[3] = d3d::Vertex( 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
 
 	// fill in the back face vertex data
-	v[4] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-	v[5] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
-	v[6] = d3d::CDumpMeshInfo::Vertex( 1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-	v[7] = d3d::CDumpMeshInfo::Vertex(-1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+	v[4] = d3d::Vertex(-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	v[5] = d3d::Vertex( 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+	v[6] = d3d::Vertex( 1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+	v[7] = d3d::Vertex(-1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
 
 	// fill in the top face vertex data
-	v[8]  = d3d::CDumpMeshInfo::Vertex(-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
-	v[9]  = d3d::CDumpMeshInfo::Vertex(-1.0f, 1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
-	v[10] = d3d::CDumpMeshInfo::Vertex( 1.0f, 1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
-	v[11] = d3d::CDumpMeshInfo::Vertex( 1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
+	v[8]  = d3d::Vertex(-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+	v[9]  = d3d::Vertex(-1.0f, 1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+	v[10] = d3d::Vertex( 1.0f, 1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
+	v[11] = d3d::Vertex( 1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
 
 	// fill in the bottom face vertex data
-	v[12] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f);
-	v[13] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
-	v[14] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f);
-	v[15] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+	v[12] = d3d::Vertex(-1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f);
+	v[13] = d3d::Vertex( 1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
+	v[14] = d3d::Vertex( 1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f);
+	v[15] = d3d::Vertex(-1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
 
 	// fill in the left face vertex data
-	v[16] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	v[17] = d3d::CDumpMeshInfo::Vertex(-1.0f,  1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	v[18] = d3d::CDumpMeshInfo::Vertex(-1.0f,  1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-	v[19] = d3d::CDumpMeshInfo::Vertex(-1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	v[16] = d3d::Vertex(-1.0f, -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	v[17] = d3d::Vertex(-1.0f,  1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[18] = d3d::Vertex(-1.0f,  1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	v[19] = d3d::Vertex(-1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	// fill in the right face vertex data
-	v[20] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	v[21] = d3d::CDumpMeshInfo::Vertex( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	v[22] = d3d::CDumpMeshInfo::Vertex( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-	v[23] = d3d::CDumpMeshInfo::Vertex( 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	v[20] = d3d::Vertex( 1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	v[21] = d3d::Vertex( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[22] = d3d::Vertex( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	v[23] = d3d::Vertex( 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	Mesh->UnlockVertexBuffer();     // 解锁顶点缓冲区
 

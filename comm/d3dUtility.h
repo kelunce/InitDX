@@ -105,31 +105,35 @@ namespace d3d
         int m_nHeight;
     };
 
+    // 最大浮点值
+    const float INFINITY = FLT_MAX;
     // 两个浮点型数据相等的最小误差
-    const float EPSILON = 0.001F;
+    const float EPSILON = 0.001f;
     // 比较浮点型相等
     bool FloatEquals(float &lhs, float &rhs);
 
 
-    class CDumpMeshInfo
+    //
+    // Vertex Structures
+    //
+    struct Vertex
     {
-    public:
-        // 这个类仅仅支持下面的顶点格式的网格对象
-        struct Vertex
+        Vertex(){}
+        Vertex(float x, float y, float z, 
+            float nx, float ny, float nz, float u, float v)
         {
-            Vertex(){}
-            Vertex(float x, float y, float z, 
-                float nx, float ny, float nz, float u, float v)
-            {
-                _x = x;   _y = y;   _z = z;
-                _nx = nx; _ny = ny; _nz = nz;
-                _u = u;   _v = v;
-            }
+            _x = x;   _y = y;   _z = z;
+            _nx = nx; _ny = ny; _nz = nz;
+            _u = u;   _v = v;
+        }
 
-            float _x, _y, _z, _nx, _ny, _nz, _u, _v;
+        float _x, _y, _z, _nx, _ny, _nz, _u, _v;
 
-            static const DWORD FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1;
-        };
+        static const DWORD FVF;
+    };
+
+    class CDumpMeshInfo
+    {       
     private:
         std::wofstream m_OutFile; // used to dump mesh data to file
         bool CheckStreamValid(){ return m_OutFile.is_open();}
@@ -157,6 +161,37 @@ namespace d3d
         bool dumpAttributeTable(ID3DXMesh* mesh);
     };
 
+
+
+
+
+    //
+    // Bounding Objects
+    //
+
+    struct BoundingBox  // 立方体边界描述对象,只需要记录两个对角的坐标
+    {
+        BoundingBox();
+
+        bool isPointInside(D3DXVECTOR3& p);
+
+        D3DXVECTOR3 _min;
+        D3DXVECTOR3 _max;
+    };
+
+    struct BoundingSphere   //球形边界描述对象,只需要记录球体的圆点和半径
+    {
+        BoundingSphere();
+
+        D3DXVECTOR3 _center;
+        float       _radius;
+    };
+
+    // Function references "desert.bmp" internally.  This file must
+    // be in the working directory.
+    bool DrawBasicScene(
+        IDirect3DDevice9* device,// Pass in 0 for cleanup.
+        float scale);            // uniform scale 
 
 }
 

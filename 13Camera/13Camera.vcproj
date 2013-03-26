@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="12XFile"
-	ProjectGUID="{3B37F09C-0C6E-4884-A790-3DD871787500}"
-	RootNamespace="XFile"
+	Name="13Camera"
+	ProjectGUID="{1849E0FA-8E06-4A03-AAFC-26CDEE2267DD}"
+	RootNamespace="My13Camera"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -114,7 +114,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
@@ -173,7 +173,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\xfile.cpp"
+				RelativePath=".\camera.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\cameraApp.cpp"
 				>
 			</File>
 		</Filter>
@@ -182,6 +186,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\camera.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"

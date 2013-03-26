@@ -1,17 +1,20 @@
 ﻿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
-// File: xfile.cpp
+// File: pmesh.cpp
 // 
 // Author: Frank Luna (C) All Rights Reserved
 //
 // System: AMD Athlon 1800+ XP, 512 DDR, Geforce 3, Windows XP, MSVC++ 7.0 
 //
-// Desc: Demonstrates how to load and render an XFile.
+// Desc: Demonstrates how to use the progressive mesh interface (ID3DXPMesh).  Use
+//       the 'A' key to add triangles, use the 'S' key to remove triangles.  Note
+//       that we outline the triangles in yellow so that you can see them get 
+//       removed and added.
 //          
 //////////////////////////////////////////////////////////////////////////////////////////////////
-#include <vector>
-#include "d3dUtility.h"
 
+#include "d3dUtility.h"
+#include <vector>
 
 //
 // Globals
@@ -22,7 +25,8 @@ IDirect3DDevice9* Device = 0;
 const int Width  = 640;
 const int Height = 480;
 
-ID3DXMesh*                      Mesh = 0;
+ID3DXMesh*                      SourceMesh = 0;
+ID3DXPMesh*                     PMesh      = 0; // progressive mesh,渐进网格对象,并非普通网格对象ID3DXMesh
 std::vector<D3DMATERIAL9>       Mtrls(0);
 std::vector<IDirect3DTexture9*> Textures(0);
 
@@ -30,26 +34,26 @@ std::vector<IDirect3DTexture9*> Textures(0);
 // Framework functions
 //
 bool Setup()
-{ 
+{
 	HRESULT hr = 0;
 
 	//
 	// Load the XFile data.
 	//
 
-    ID3DXBuffer* adjBuffer  = 0;    // 封装一个buffer,提供GetBufferSize和GetBufferPointer,void*指针
+	ID3DXBuffer* adjBuffer  = 0;
 	ID3DXBuffer* mtrlBuffer = 0;
 	DWORD        numMtrls   = 0;
 
-	hr = D3DXLoadMeshFromX(     //从X文件中读取几何信息数据,动画信息是读不到的
-		_T("bigship1.x"),       // 这是一个bin格式的X文件
-		D3DXMESH_MANAGED,       //mesh数据将被放在受控的内存中
-		Device,                 //与复制mesh有关的设备。
-		&adjBuffer,             //返回一个ID3DXBuffer包含一个DWORD数组，描述mesh的邻接信息
-		&mtrlBuffer,            //返回一个ID3DXBuffer包含一个D3DXMATERIAL结构的数组，存储了mesh的材质数据
-        0,                      //返回一个ID3DXBuffer包含一个D3DXEFFECTINSTANCE结构的数组。我们现在通过指定0值来忽略这个参数
-		&numMtrls,              //返回mesh的材质数。对应于网格子集ID数量
-		&Mesh);                 //返回填充了X文件几何信息的ID3DXMesh对象。
+	hr = D3DXLoadMeshFromX(  
+		_T("bigship1.x"),
+		D3DXMESH_MANAGED,
+		Device,
+		&adjBuffer,
+		&mtrlBuffer,
+		0,
+		&numMtrls,
+		&SourceMesh);
 
 	if(FAILED(hr))
 	{
@@ -57,43 +61,29 @@ bool Setup()
 		return false;
 	}
 
-    // Get Mesh Info
-    TCHAR szMeshInfo[2048];
-    swprintf(szMeshInfo,sizeof(szMeshInfo),_T("顶点格式:0x%04x,\n面数:%u,\n顶点大小:%u,\n顶点数量:%u \n"),
-    Mesh->GetFVF(),
-    Mesh->GetNumFaces(),
-    Mesh->GetNumBytesPerVertex(),
-    Mesh->GetNumVertices()
-    );
-    OutputDebugStr(szMeshInfo);
-    /*
-    DWORD* attributeBuffer = 0;
-    Mesh->LockAttributeBuffer(0, &attributeBuffer);
-    Mesh->UnlockAttributeBuffer();  // 解锁属性缓冲区
-    */
 	//
-	// Extract the materials, and load textures.
+	// Extract the materials, load textures.
 	//
 
 	if( mtrlBuffer != 0 && numMtrls != 0 )
 	{
-		D3DXMATERIAL* mtrls = (D3DXMATERIAL*)mtrlBuffer->GetBufferPointer();// D3DXMATERIAL的纹理名是ANSI编码,这个结构体不存在UNICODE版本!!
+		D3DXMATERIAL* mtrls = (D3DXMATERIAL*)mtrlBuffer->GetBufferPointer();
 
 		for(int i = 0; i < numMtrls; i++)
 		{
 			// the MatD3D property doesn't have an ambient value set
 			// when its loaded, so set it now:
-			mtrls[i].MatD3D.Ambient = mtrls[i].MatD3D.Diffuse; // 设置环境光
+			mtrls[i].MatD3D.Ambient = mtrls[i].MatD3D.Diffuse;
 
 			// save the ith material
 			Mtrls.push_back( mtrls[i].MatD3D );
 
 			// check if the ith material has an associative texture
-			if( mtrls[i].pTextureFilename != 0 )// bigship1.x没有关联纹理
-			{               
+			if( mtrls[i].pTextureFilename != 0 )
+			{
                 TCHAR filename[MAX_PATH];
 #ifdef UNICODE
-                 // Need to convert the texture filenames to Unicode string
+                // Need to convert the texture filenames to Unicode string
                 MultiByteToWideChar( CP_ACP, 0, mtrls[i].pTextureFilename, -1, filename, MAX_PATH );
                 filename[MAX_PATH - 1] = _T('\0');
 #else 
@@ -101,11 +91,11 @@ bool Setup()
                 strcat_s(filename,sizeof(filename),mtrls[i].pTextureFilename);
 #endif
 
-                // yes, load the texture for the ith subset
+				// yes, load the texture for the ith subset
 				IDirect3DTexture9* tex = 0;
 				D3DXCreateTextureFromFile(
 					Device,
-                    filename,
+					filename,
 					&tex);
 
 				// save the loaded texture
@@ -124,25 +114,46 @@ bool Setup()
 	// Optimize the mesh.
 	//
 
-    // 这个X文件有顶点法线,这里只是重新计算作为演示.如果网格没有法线格式则需要用cloneMeshFVF方法复制新的网格格式再计算
-    D3DXComputeNormals(Mesh,(DWORD*)adjBuffer->GetBufferPointer());// 生成顶点法线
-
-	hr = Mesh->OptimizeInplace(		
+	hr = SourceMesh->OptimizeInplace(		
 		D3DXMESHOPT_ATTRSORT |
 		D3DXMESHOPT_COMPACT  |
 		D3DXMESHOPT_VERTEXCACHE,
 		(DWORD*)adjBuffer->GetBufferPointer(),
-		0, 0, 0);
-
-	d3d::Release<ID3DXBuffer*>(adjBuffer); // done w/ buffer
-
-    
+		(DWORD*)adjBuffer->GetBufferPointer(), // new adjacency info
+		0, 0);
 
 	if(FAILED(hr))
 	{
 		::MessageBox(0, _T("OptimizeInplace() - FAILED"), 0, 0);
+		d3d::Release<ID3DXBuffer*>(adjBuffer); // free
 		return false;
 	}
+
+	//
+	// Generate the progressive mesh. 生成渐进式网格
+	//
+
+	hr = D3DXGeneratePMesh(
+		SourceMesh,                                 // [in]用来生成渐进式网格的普通网格
+		(DWORD*)adjBuffer->GetBufferPointer(),      // [in]adjacency,邻接数组
+        0,                  // [in]default vertex attribute weights,指向一个D3DXATTRIBUTEWEIGHTS数组，它的大小是pMesh->GetNumVertices()。
+		0,                  // [in]default vertex weights,float数组，它的大小是pMesh->GetNumVertices(),第i项与pMesh中的第i个顶点相对应
+		1,                  // [in]simplify as low as possible,不可能被设置为一个面,这里设置为1仅仅表示尽可能简化
+		D3DXMESHSIMP_FACE,  // [in]simplify by face count,上面的1表示面数
+		&PMesh);            // [out]获得的渐进式网格
+
+	d3d::Release<ID3DXMesh*>(SourceMesh);  // done w/ source mesh
+	d3d::Release<ID3DXBuffer*>(adjBuffer); // done w/ buffer
+
+	if(FAILED(hr))
+	{
+		::MessageBox(0, _T("D3DXGeneratePMesh() - FAILED"), 0, 0);
+		return false;
+	}
+
+	// set to original detail
+	DWORD maxFaces = PMesh->GetMaxFaces();// 返回渐进网格能够被设置的最大面数。
+	PMesh->SetNumFaces(maxFaces);           // 设置面的个数,最大只能设置为上面的值,即初始时是最精细的网格模型
 
 	//
 	// Set texture filters.
@@ -169,7 +180,7 @@ bool Setup()
 	// Set camera.
 	//
 
-	D3DXVECTOR3 pos(4.0f, 4.0f, -13.0f);
+	D3DXVECTOR3 pos(-8.0f, 4.0f, -12.0f);
 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 
@@ -200,7 +211,7 @@ bool Setup()
 
 void Cleanup()
 {
-	d3d::Release<ID3DXMesh*>(Mesh);
+	d3d::Release<ID3DXPMesh*>(PMesh);
 
 	for(int i = 0; i < Textures.size(); i++)
 		d3d::Release<IDirect3DTexture9*>( Textures[i] );
@@ -211,21 +222,28 @@ bool Display(float timeDelta)
 	if( Device )
 	{
 		//
-		// Update: Rotate the mesh.这里是旋转模型,而不是旋转摄像机
+		// Update: Mesh resolution.
 		//
 
-		static float y = 0.0f;
-		D3DXMATRIX yRot;
-		D3DXMatrixRotationY(&yRot, y);
-		y += timeDelta;
+		// Get the current number of faces the pmesh has.
+		int numFaces = PMesh->GetNumFaces();
 
-		if( y >= 6.28f )
-			y = 0.0f;
+		// Add a face, note the SetNumFaces() will  automatically
+		// clamp the specified value if it goes out of bounds.
+		if( ::GetAsyncKeyState('A') & 0x8000f )
+		{
+			// Sometimes we must add more than one face to invert
+			// an edge collapse transformation
+			PMesh->SetNumFaces( numFaces + 1 ); // 增加渐进式网格面数
+			if( PMesh->GetNumFaces() == numFaces )  // 可能递增1没有效果就递增2个面
+				PMesh->SetNumFaces( numFaces + 2 );
+		}
 
-		D3DXMATRIX World = yRot;
-
-		Device->SetTransform(D3DTS_WORLD, &World);
-
+		// Remove a face, note the SetNumFaces() will  automatically
+		// clamp the specified value if it goes out of bounds.
+		if( ::GetAsyncKeyState('S') & 0x8000f )
+			PMesh->SetNumFaces( numFaces - 1 ); // 减少渐进式网格面数
+		
 		//
 		// Render
 		//
@@ -235,9 +253,16 @@ bool Display(float timeDelta)
 
 		for(int i = 0; i < Mtrls.size(); i++)
 		{
+			// draw pmesh
 			Device->SetMaterial( &Mtrls[i] );
 			Device->SetTexture(0, Textures[i]);
-			Mesh->DrawSubset(i); // D3DXLoadMeshFromX获得的材质数量就是网格子集的数量,并且从0开始递增
+			PMesh->DrawSubset(i);
+
+			// draw wireframe outline ,渲染外框
+			Device->SetMaterial(&d3d::YELLOW_MTRL);
+			Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+			PMesh->DrawSubset(i);
+			Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 		}	
 
 		Device->EndScene();
