@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
+ï»¿//////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // File: camera.cpp
 // 
@@ -65,7 +65,7 @@ void Camera::getLook(D3DXVECTOR3* look)
 void Camera::walk(float units)
 {
 	// move only on xz plane for land object
-	if( _cameraType == LANDOBJECT )// µØÃæÉãÏñ»úÖ»ÄÜÔÚµØÃæÒÆ¶¯,²»ÄÜÔÚYÖáÓÐÒÆ¶¯
+	if( _cameraType == LANDOBJECT )
 		_pos += D3DXVECTOR3(_look.x, 0.0f, _look.z) * units;
 
 	if( _cameraType == AIRCRAFT )
@@ -84,10 +84,6 @@ void Camera::strafe(float units)
 
 void Camera::fly(float units)
 {
-	// move only on y-axis for land object
-	if( _cameraType == LANDOBJECT )
-		_pos.y += units;
-
 	if( _cameraType == AIRCRAFT )
 		_pos += _up * units;
 }
@@ -95,18 +91,10 @@ void Camera::fly(float units)
 void Camera::pitch(float angle)
 {
 	D3DXMATRIX T;
-	D3DXMatrixRotationAxis( // ÈÆÈÎÒâÖáÐý×ª
-        &T,                 // [out] Ðý×ª¾ØÕó
-        &_right,	        // [in] Ðý×ªÖá
-        angle               // [in] Ðý×ª½Ç¶È
-        );
+	D3DXMatrixRotationAxis(&T, &_right,	angle);
 
 	// rotate _up and _look around _right vector
-	D3DXVec3TransformCoord(     // ¶Ôµã½øÐÐ×ø±ê×ª»»,µÚËÄ¸ö×ø±ê»á±»ÖÃÎª1. Èç¹ûÊ¹ÓÃD3DXVec3TransformNormal,ÔòµÚËÄ±äÁ¿»á±»ÖÃÎª0
-        &_up,                   // [out]±ä»»ÒÔºóµÄ×ø±êµã
-        &_up,                   // [in]ÐèÒªÄÃÀ´±ä»»µÄ×ø±êµã
-        &T                      // [in]±ä»»¾ØÕó
-        );
+	D3DXVec3TransformCoord(&_up,&_up, &T);
 	D3DXVec3TransformCoord(&_look,&_look, &T);
 }
 
@@ -116,11 +104,11 @@ void Camera::yaw(float angle)
 
 	// rotate around world y (0, 1, 0) always for land object
 	if( _cameraType == LANDOBJECT )
-		D3DXMatrixRotationY(&T, angle); // ÈÆYÖáÐý×ª
+		D3DXMatrixRotationY(&T, angle);
 
 	// rotate around own up vector for aircraft
 	if( _cameraType == AIRCRAFT )
-		D3DXMatrixRotationAxis(&T, &_up, angle); // ÈÆÉãÏñ»úµ±Ç°µÄ_UP·½ÏòÐý×ª
+		D3DXMatrixRotationAxis(&T, &_up, angle);
 
 	// rotate _right and _look around _up or y-axis
 	D3DXVec3TransformCoord(&_right,&_right, &T);
@@ -143,7 +131,7 @@ void Camera::roll(float angle)
 
 void Camera::getViewMatrix(D3DXMATRIX* V)
 {
-	// Keep camera's axes orthogonal to eachother,±£Ö¤ÉãÏñ»ú¸÷¸öÖáµÄÕý½»
+	// Keep camera's axes orthogonal to eachother
 	D3DXVec3Normalize(&_look, &_look);
 
 	D3DXVec3Cross(&_up, &_look, &_right);
@@ -153,7 +141,7 @@ void Camera::getViewMatrix(D3DXMATRIX* V)
 	D3DXVec3Normalize(&_right, &_right);
 
 	// Build the view matrix:
-	float x = -D3DXVec3Dot(&_right, &_pos); // ÏòÁ¿µã³ËÏòÁ¿ºóµÃµ½Ò»¸öÊý×Ö
+	float x = -D3DXVec3Dot(&_right, &_pos);
 	float y = -D3DXVec3Dot(&_up, &_pos);
 	float z = -D3DXVec3Dot(&_look, &_pos);
 

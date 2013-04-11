@@ -55,7 +55,7 @@ bool Setup()
 void Cleanup()
 {
 	// pass 0 for the first parameter to instruct cleanup.
-	d3d::DrawBasicScene(0, 0.0f);
+	d3d::DrawBasicScene(0, 0.0f);   // 清除场景
 }
 
 bool Display(float timeDelta)
@@ -66,41 +66,46 @@ bool Display(float timeDelta)
 		// Update: Update the camera.
 		//
 
-		if( ::GetAsyncKeyState('W') & 0x8000f )
-			TheCamera.walk(4.0f * timeDelta);
+        HWND hCurWnd = ::GetForegroundWindow();     // 当前用户激活的窗口
+        HWND hGameWnd = d3d::GetGlobleD3DPP().hDeviceWindow;    // 游戏窗口
+        if(hCurWnd == hGameWnd)
+        {
+		    if( ::GetAsyncKeyState('W') & 0x8000f )
+			    TheCamera.walk(4.0f * timeDelta);   // 前移
 
-		if( ::GetAsyncKeyState('S') & 0x8000f )
-			TheCamera.walk(-4.0f * timeDelta);
+		    if( ::GetAsyncKeyState('S') & 0x8000f )
+			    TheCamera.walk(-4.0f * timeDelta);  // 后移
 
-		if( ::GetAsyncKeyState('A') & 0x8000f )
-			TheCamera.strafe(-4.0f * timeDelta);
+		    if( ::GetAsyncKeyState('A') & 0x8000f )
+			    TheCamera.strafe(-4.0f * timeDelta);// 左移
 
-		if( ::GetAsyncKeyState('D') & 0x8000f )
-			TheCamera.strafe(4.0f * timeDelta);
+		    if( ::GetAsyncKeyState('D') & 0x8000f )
+			    TheCamera.strafe(4.0f * timeDelta); // 右移
 
-		if( ::GetAsyncKeyState('R') & 0x8000f )
-			TheCamera.fly(4.0f * timeDelta);
+		    if( ::GetAsyncKeyState('R') & 0x8000f )
+			    TheCamera.fly(4.0f * timeDelta);    // 上移
 
-		if( ::GetAsyncKeyState('F') & 0x8000f )
-			TheCamera.fly(-4.0f * timeDelta);
+		    if( ::GetAsyncKeyState('F') & 0x8000f )
+			    TheCamera.fly(-4.0f * timeDelta);   // 下移
 
-		if( ::GetAsyncKeyState(VK_UP) & 0x8000f )
-			TheCamera.pitch(1.0f * timeDelta);
+		    if( ::GetAsyncKeyState(VK_UP) & 0x8000f )
+			    TheCamera.pitch(1.0f * timeDelta);  // 绕right轴下转 
 
-		if( ::GetAsyncKeyState(VK_DOWN) & 0x8000f )
-			TheCamera.pitch(-1.0f * timeDelta);
+		    if( ::GetAsyncKeyState(VK_DOWN) & 0x8000f )
+			    TheCamera.pitch(-1.0f * timeDelta); // 绕right轴上转
 
-		if( ::GetAsyncKeyState(VK_LEFT) & 0x8000f )
-			TheCamera.yaw(-1.0f * timeDelta);
-			
-		if( ::GetAsyncKeyState(VK_RIGHT) & 0x8000f )
-			TheCamera.yaw(1.0f * timeDelta);
+		    if( ::GetAsyncKeyState(VK_LEFT) & 0x8000f )
+			    TheCamera.yaw(-1.0f * timeDelta);   // 左转
+    			
+		    if( ::GetAsyncKeyState(VK_RIGHT) & 0x8000f )
+			    TheCamera.yaw(1.0f * timeDelta);    // 右转
 
-		if( ::GetAsyncKeyState('N') & 0x8000f )
-			TheCamera.roll(1.0f * timeDelta);
+		    if( ::GetAsyncKeyState('N') & 0x8000f )
+			    TheCamera.roll(1.0f * timeDelta);
 
-		if( ::GetAsyncKeyState('M') & 0x8000f )
-			TheCamera.roll(-1.0f * timeDelta);
+		    if( ::GetAsyncKeyState('M') & 0x8000f )
+			    TheCamera.roll(-1.0f * timeDelta);
+        }
 
 		// Update the view matrix representing the cameras 
         // new position/orientation.

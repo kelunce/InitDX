@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="13Camera"
-	ProjectGUID="{1849E0FA-8E06-4A03-AAFC-26CDEE2267DD}"
-	RootNamespace="My13Camera"
+	Name="14Terrain"
+	ProjectGUID="{6A1D4950-EA7A-44F1-9310-4D9CC32EE399}"
+	RootNamespace="My14Terrain"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -114,7 +114,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
@@ -177,7 +177,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cameraApp.cpp"
+				RelativePath=".\d3dfont.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\d3dutil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\dxutil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\fps.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\terrain.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\terrainDriver.cpp"
 				>
 			</File>
 		</Filter>
@@ -188,6 +208,26 @@
 			>
 			<File
 				RelativePath=".\camera.h"
+				>
+			</File>
+			<File
+				RelativePath=".\d3dfont.h"
+				>
+			</File>
+			<File
+				RelativePath=".\d3dutil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\dxutil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\fps.h"
+				>
+			</File>
+			<File
+				RelativePath=".\terrain.h"
 				>
 			</File>
 		</Filter>

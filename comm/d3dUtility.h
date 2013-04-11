@@ -26,8 +26,7 @@
 #include <d3dx9.h>
 #include <string>
 #include <fstream>
-
-
+#include <limits>
 
 namespace d3d
 {
@@ -38,6 +37,8 @@ namespace d3d
 	D3DDEVTYPE deviceType,     // [in] HAL or REF
 	IDirect3DDevice9** device);// [out]The created device.
 
+    D3DPRESENT_PARAMETERS &GetGlobleD3DPP();
+
     int EnterMsgLoop( 
 	bool (*ptr_display)(float timeDelta));
 
@@ -47,6 +48,9 @@ namespace d3d
 	WPARAM wParam,
 	LPARAM lParam);
 
+	//
+	// Cleanup
+	//
 	template<class T> void Release(T t)
 	{
 		if( t )
@@ -74,6 +78,19 @@ namespace d3d
 	const D3DXCOLOR     YELLOW( D3DCOLOR_XRGB(255, 255,   0) );
 	const D3DXCOLOR       CYAN( D3DCOLOR_XRGB(  0, 255, 255) );
 	const D3DXCOLOR    MAGENTA( D3DCOLOR_XRGB(255,   0, 255) );
+	const D3DXCOLOR BEACH_SAND( D3DCOLOR_XRGB(255, 249, 157) );
+	const D3DXCOLOR DESERT_SAND( D3DCOLOR_XRGB(250, 205, 135) );
+
+	const D3DXCOLOR LIGHTGREEN( D3DCOLOR_XRGB( 60, 184, 120) );
+	const D3DXCOLOR  PUREGREEN( D3DCOLOR_XRGB(  0, 166,  81) );
+	const D3DXCOLOR  DARKGREEN( D3DCOLOR_XRGB(  0, 114,  54) );
+
+	const D3DXCOLOR LIGHT_YELLOW_GREEN( D3DCOLOR_XRGB(124, 197, 118) );
+	const D3DXCOLOR  PURE_YELLOW_GREEN( D3DCOLOR_XRGB( 57, 181,  74) );
+	const D3DXCOLOR  DARK_YELLOW_GREEN( D3DCOLOR_XRGB( 25, 123,  48) );
+
+	const D3DXCOLOR LIGHTBROWN(D3DCOLOR_XRGB(198, 156, 109));
+	const D3DXCOLOR DARKBROWN( D3DCOLOR_XRGB(115, 100,  87));
 
     // 常用光源定义
     D3DLIGHT9 InitDirectionalLight(D3DXVECTOR3 *direction,D3DXCOLOR *color);                // 简单的平行光光源
@@ -193,6 +210,29 @@ namespace d3d
         IDirect3DDevice9* device,// Pass in 0 for cleanup.
         float scale);            // uniform scale 
 
+	//
+	// Randomness
+	//
+
+	// Desc: Return random float in [lowBound, highBound] interval.
+	float GetRandomFloat(float lowBound, float highBound);
+	
+	// Desc: Returns a random vector in the bounds specified by min and max.
+	void GetRandomVector(
+		D3DXVECTOR3* out,
+		D3DXVECTOR3* min,
+		D3DXVECTOR3* max);
+
+	//
+	// Conversion
+	//
+	DWORD FtoDw(float f);
+
+	//
+	// Interpolation
+	//
+
+	float Lerp(float a, float b, float t);
 }
 
 #endif // __d3dUtilityH__

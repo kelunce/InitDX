@@ -90,9 +90,8 @@ bool d3d::InitD3D(
 	else
 		vp = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 
-	// Step 3: Fill out the D3DPRESENT_PARAMETERS structure.
- 
-	D3DPRESENT_PARAMETERS g_d3dpp;  // D3D初始化参数
+	// Step 3: Fill out the D3DPRESENT_PARAMETERS structure. 
+	D3DPRESENT_PARAMETERS &g_d3dpp = GetGlobleD3DPP();  // D3D初始化参数
 	g_d3dpp.BackBufferWidth            = width;                   // 后备缓冲表面的宽度（以像素为单位）
 	g_d3dpp.BackBufferHeight           = height;                  // 后备缓冲表面的高度（以像素为单位）
 	g_d3dpp.BackBufferFormat           = D3DFMT_A8R8G8B8;         // 后备缓冲表面的像素格式
@@ -222,6 +221,7 @@ D3DLIGHT9 d3d::InitPointLight( D3DXVECTOR3 *position,D3DXCOLOR *color )
     light.Specular = *color * 0.6f;     // 此光源发出的镜面光颜色。
     light.Position = *position;         // 光源世界坐标位置,这个值对平行光是无意义的
     light.Range = 1000.0f;              // 灯光能够传播的最大范围,这个值对平行光是无意义的
+	light.Falloff      = 1.0f;
     light.Attenuation0 = 1.0f;          // 灯光强度的传播距离的恒定衰减
     light.Attenuation1 = 0.0f;          // 灯光强度的传播距离的线性衰减
     light.Attenuation2 = 0.0f;          // 灯光强度的传播距离的二次衰减
@@ -244,8 +244,8 @@ D3DLIGHT9 d3d::InitSpotLight( D3DXVECTOR3 *position,D3DXVECTOR3 *direction,D3DXC
     light.Attenuation0 = 1.0f;
     light.Attenuation1 = 0.0f;
     light.Attenuation2 = 0.0f;
-    light.Theta        = 0.4f;      // 只用于聚光灯；指定内圆锥的角度，单位是弧度。
-    light.Phi          = 0.9f;      // 只用于聚光灯；指定外圆锥的角度，单位是弧度。
+    light.Theta        = 0.5f;      // 只用于聚光灯；指定内圆锥的角度，单位是弧度。
+    light.Phi          = 0.7f;      // 只用于聚光灯；指定外圆锥的角度，单位是弧度。
 
     return light;
 }
@@ -585,8 +585,8 @@ bool d3d::DrawBasicScene( IDirect3DDevice9* device,/* Pass in 0 for cleanup. */ 
 
         D3DXMatrixScaling(&S, scale, scale, scale);
 
-        // used to rotate cylinders to be parallel with world's y-axis
-        D3DXMatrixRotationX(&R, -D3DX_PI * 0.5f);
+		// used to rotate cylinders to be parallel with world's y-axis
+		D3DXMatrixRotationX(&R, -D3DX_PI * 0.5f);
 
         // draw floor
         D3DXMatrixIdentity(&T);
@@ -615,4 +615,42 @@ bool d3d::DrawBasicScene( IDirect3DDevice9* device,/* Pass in 0 for cleanup. */ 
         }
     }
     return true;
+}
+
+D3DPRESENT_PARAMETERS & d3d::GetGlobleD3DPP()
+{
+    static D3DPRESENT_PARAMETERS g_d3dpp;
+    return g_d3dpp;
+}
+
+float d3d::GetRandomFloat(float lowBound, float highBound)
+{
+	if( lowBound >= highBound ) // bad input
+		return lowBound;
+
+	// get random float in [0, 1] interval
+	float f = (rand() % 10000) * 0.0001f; 
+
+	// return float in [lowBound, highBound] interval. 
+	return (f * (highBound - lowBound)) + lowBound; 
+}
+
+void d3d::GetRandomVector(
+	  D3DXVECTOR3* out,
+	  D3DXVECTOR3* min,
+	  D3DXVECTOR3* max)
+{
+	out->x = GetRandomFloat(min->x, max->x);
+	out->y = GetRandomFloat(min->y, max->y);
+	out->z = GetRandomFloat(min->z, max->z);
+}
+
+DWORD d3d::FtoDw(float f)
+{
+	return *((DWORD*)&f);
+}
+
+float d3d::Lerp(float a, float b, float t)
+{
+	return a - (a*t) + (b*t);
 }
