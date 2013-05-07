@@ -88,9 +88,9 @@ bool Terrain::computeVertices()
 
 	hr = _device->CreateVertexBuffer(
 		_numVertices * sizeof(TerrainVertex),
-		D3DUSAGE_WRITEONLY,
+		D3DUSAGE_WRITEONLY,                     // 只写
 		TerrainVertex::FVF,
-		D3DPOOL_MANAGED,
+		D3DPOOL_MANAGED,                        // 托管内存
 		&_vb,
 		0);
 
@@ -107,7 +107,7 @@ bool Terrain::computeVertices()
 
 	// compute the increment size of the texture coordinates
 	// from one vertex to the next.
-	float uCoordIncrementSize = 1.0f / (float)_numCellsPerRow;
+	float uCoordIncrementSize = 1.0f / (float)_numCellsPerRow;      // 两个相邻的网格顶点贴图坐标增量
 	float vCoordIncrementSize = 1.0f / (float)_numCellsPerCol;
 
 	TerrainVertex* v = 0;
@@ -124,10 +124,10 @@ bool Terrain::computeVertices()
 			int index = i * _numVertsPerRow + j;
 
 			v[index] = TerrainVertex(
-				(float)x,
+				(float)x,                           // 世界坐标
 				(float)_heightmap[index],
 				(float)z,
-				(float)j * uCoordIncrementSize,
+				(float)j * uCoordIncrementSize,     // 贴图坐标
 				(float)i * vCoordIncrementSize);
 
 			j++; // next column
@@ -140,6 +140,13 @@ bool Terrain::computeVertices()
 	return true;
 }
 
+
+//  A   B
+//  *---*
+//  | / |
+//  *---*  
+//  C   D
+// 对于第(i,j)个方格,顶点A的坐标显然是(i,j),B(i,j+1),C(i+1,j),D(i+1,j+1)
 bool Terrain::computeIndices()
 {
 	HRESULT hr = 0;
@@ -167,7 +174,7 @@ bool Terrain::computeIndices()
 	{
 		for(int j = 0; j < _numCellsPerRow; j++)
 		{
-			indices[baseIndex]     =   i   * _numVertsPerRow + j;
+			indices[baseIndex]     =   i   * _numVertsPerRow + j;           // 对应的一维顶点缓冲区的下标
 			indices[baseIndex + 1] =   i   * _numVertsPerRow + j + 1;
 			indices[baseIndex + 2] = (i+1) * _numVertsPerRow + j;
 
@@ -213,19 +220,20 @@ bool Terrain::genTexture(D3DXVECTOR3* directionToLight)
 	int texHeight = _numCellsPerCol;
 
 	// create an empty texture
-	hr = D3DXCreateTexture(
+	hr = D3DXCreateTexture(                     // 创建空纹理
 		_device,
-		texWidth, texHeight,
-		0, // create a complete mipmap chain
-		0, // usage
-		D3DFMT_X8R8G8B8,// 32 bit XRGB format
+		texWidth,                               // 像素宽度  ,   每个方格一个颜色
+        texHeight,                              // 像素高度
+		0,                                      // create a complete mipmap chain.创建完整的多纹理映射链.各种大小的贴图队列.比如512*512,256*256,128*128,64*64,32*32
+		0,                                      // usage,资源是怎么被使用的
+		D3DFMT_X8R8G8B8,// 32 bit XRGB format,32位像素格式
 		D3DPOOL_MANAGED, &_tex);
 
 	if(FAILED(hr))
 		return false;
 
 	D3DSURFACE_DESC textureDesc; 
-	_tex->GetLevelDesc(0 /*level*/, &textureDesc);
+	_tex->GetLevelDesc(0 /*level*/, &textureDesc);  // 获取表面缓冲区描述
 
 	// make sure we got the requested format because our code 
 	// that fills the texture is hard coded to a 32 bit pixel depth.
@@ -236,6 +244,7 @@ bool Terrain::genTexture(D3DXVECTOR3* directionToLight)
 	_tex->LockRect(0/*lock top surface*/, &lockedRect, 
 		0 /* lock entire tex*/, 0/*flags*/);         
 
+    // 遍历所有方格,为每个方格指定颜色
 	DWORD* imageData = (DWORD*)lockedRect.pBits;
 	for(int i = 0; i < texHeight; i++)
 	{
@@ -267,11 +276,11 @@ bool Terrain::genTexture(D3DXVECTOR3* directionToLight)
 		return false;
 	}
 	
-	hr = D3DXFilterTexture(
-		_tex,
-		0, // default palette
-		0, // use top level as source level
-		D3DX_DEFAULT); // default filter
+	hr = D3DXFilterTexture(                 // 填充其他级别的纹理映射链
+		_tex,                               // 被用来填充mipmap层次的纹理
+		0,                                  // default palette,使用默认调色板
+		0,                                  // use top level as source level,使用高层次的作源生成低层次的mipmap
+		D3DX_DEFAULT);                      // default filter,默认的过滤器
 
 	if(FAILED(hr))
 	{

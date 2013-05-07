@@ -204,6 +204,11 @@ namespace d3d
         float       _radius;
     };
 
+	struct Ray
+	{
+		D3DXVECTOR3 _origin;
+		D3DXVECTOR3 _direction;
+	};
     // Function references "desert.bmp" internally.  This file must
     // be in the working directory.
     bool DrawBasicScene(
